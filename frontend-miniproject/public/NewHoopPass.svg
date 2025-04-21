@@ -1,0 +1,31 @@
+<svg width="320" height="80" viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HoopPass Logo">
+  <defs>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#ff4d00" />
+    </linearGradient>
+    <clipPath id="clipPath">
+      <circle cx="40" cy="40" r="18"/>
+    </clipPath>
+  </defs>
+
+  <!-- Rotated Basketball Icon -->
+  <g transform="rotate(-45, 40, 40)">
+    <circle cx="40" cy="40" r="18" fill="url(#orangeGrad)" />
+    
+    <!-- Horizontal Seam, clipped inside the circle -->
+    <path d="M22 40 H58" stroke="#0c0c0c" stroke-width="2" clip-path="url(#clipPath)" />
+    
+    <!-- Vertical Seam, clipped inside the circle -->
+    <path d="M40 22 V58" stroke="#0c0c0c" stroke-width="2" clip-path="url(#clipPath)" />
+    
+    <!-- Curved Seams, clipped inside the circle -->
+    <path d="M26 26 C40 36, 40 44, 26 54" stroke="#0c0c0c" stroke-width="2" fill="none" clip-path="url(#clipPath)" />
+    <path d="M54 26 C40 36, 40 44, 54 54" stroke="#0c0c0c" stroke-width="2" fill="none" clip-path="url(#clipPath)" />
+  </g>
+
+  <!-- Full "HoopPass" (joined text) with split colors -->
+  <text x="75" y="50" font-family="Montserrat, sans-serif" font-weight="700" font-size="32">
+    <tspan fill="#000000">Hoop</tspan><tspan fill="#f97316">Pass</tspan>
+  </text>
+</svg>
