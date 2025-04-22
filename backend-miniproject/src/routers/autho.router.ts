@@ -1,16 +1,16 @@
 import { Router } from "express";
-import { AuthController } from "../controllers/auth.controller";
 import { validateRegister } from "../middleware/validation";
 import { AuthMiddleware } from "../middleware/auth.middleware";
+import { AuthoController } from "../controllers/autho.controller";
 
-export class AuthRouter {
+export class AuthoRouter {
   private router: Router;
-  private authController: AuthController;
+  private authoController: AuthoController;
   private authMiddleware: AuthMiddleware;
 
   constructor() {
     this.router = Router();
-    this.authController = new AuthController();
+    this.authoController = new AuthoController();
     this.authMiddleware = new AuthMiddleware();
     this.initializeRoute();
   }
@@ -19,13 +19,13 @@ export class AuthRouter {
     this.router.post(
       "/",
       validateRegister,
-      this.authController.registerCustomer
+      this.authoController.registerOrganizer
     );
-    this.router.post("/login", this.authController.loginCustomer);
+    this.router.post("/login", this.authoController.loginOrganizer);
     this.router.patch(
-      "/verify",
-      this.authMiddleware.verifyToken,
-      this.authController.verify
+      "/verifyo",
+      this.authMiddleware.verifyTokenOrganizer,
+      this.authoController.verifyOrganizer
     );
   }
 

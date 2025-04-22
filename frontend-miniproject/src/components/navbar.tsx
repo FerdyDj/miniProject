@@ -77,7 +77,7 @@ export default function Navbar() {
 
                 {/* Avatar Menu */}
                 {isOpen && (
-                  <div className="absolute right-4 mt-45 w-48 bg-gradient-to-br from-orange-300 to-orange-400 rounded-md shadow-lg py-1 font-semibold text-center">
+                  <div className="absolute right-4 mt-45 w-60 bg-gradient-to-br from-orange-300 to-orange-400 rounded-md shadow-lg py-1 font-semibold text-center">
                     <Link
                       href="/profile"
                       className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"

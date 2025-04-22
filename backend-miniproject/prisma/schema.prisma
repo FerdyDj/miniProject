@@ -16,14 +16,67 @@ datasource db {
 }
 
 model Customer {
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  password   String
+  username   String     @unique
+  fullname   String
+  avatar     String?    @default("https://res.cloudinary.com/dexlqslwj/image/upload/v1744257672/blank-image_yfczs3_ogl5pp.jpg")
+  isVerified Boolean    @default(false)
+  refCode    String     @unique
+  refBy      String?
+  role       Role       @default(CUSTOMER)
+  createAt   DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  Point      Point[]
+  Discount   Discount[]
+}
+
+model Organizer {
   id         Int      @id @default(autoincrement())
   email      String   @unique
   password   String
   username   String   @unique
   fullname   String
-  avatar     String?  @default("https://res.cloudinary.com/dexlqslwj/image/upload/v1744257672/blank-image_yfczs3_ogl5pp.jpg")
+  avatar     String?  @default("https://res.cloudinary.com/dexlqslwj/image/upload/v1745302397/avataro_rbkxbm.svg")
   isVerified Boolean  @default(false)
-  refCode    String   @unique
+  role       Role     @default(ORGANIZER)
   createAt   DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model Point {
+  id         Int       @id @default(autoincrement())
+  type       TransType
+  points     Int
+  desc       String?
+  customerId Int
+  expiredAt  DateTime
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id])
+}
+
+model Discount {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique
+  percen     Int
+  customerId Int
+  used       Boolean  @default(false)
+  expiredAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id])
+}
+
+enum Role {
+  CUSTOMER
+  ORGANIZER
+}
+
+enum TransType {
+  EARN
+  REDEEM
 }

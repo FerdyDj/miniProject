@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "@/lib/axios";
 import { AxiosError } from "axios";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { signIn } from "next-auth/react";
@@ -40,10 +41,20 @@ export default function LoginForm() {
     action: FormikHelpers<ILoginForm>
   ) => {
     try {
+      const { data } = await axios.post("/auth/login", value);
+      const user = data.data;
+
       await signIn("credentials", {
-        email: value.email,
-        password: value.password,
         redirectTo: "/",
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        fullname: user.fullname,
+        avatar: user.avatar ?? "",
+        refCode: user.refCode ?? "",
+        refBy: user.refBy ?? "",
+        role: user.role,
+        accessToken: data.access_token,
       });
       toast.success("Login Success !");
       action.resetForm();

@@ -1,5 +1,7 @@
 "use client";
 
+import axios from "@/lib/axios";
+import { AxiosError } from "axios";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -56,20 +58,20 @@ export default function Page() {
     value: IRegForm,
     action: FormikHelpers<IRegForm>
   ) => {
-    // try {
-    //   await axios.post("/auth", value);
-    //   action.resetForm();
-    //   toast.success("Register success!");
-    //   router.push("/login");
-    // } catch (err) {
-    //   if (err instanceof AxiosError) {
-    //     toast.error(err.response?.data?.message);
-    //     console.log(err);
-    //   } else {
-    //     toast.error("Register Failed !");
-    //     console.log(err);
-    //   }
-    // }
+    try {
+      const { data } = await axios.post("/autho", value);
+      action.resetForm();
+      toast.success(data.message);
+      router.push("/login/organizer");
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data?.message);
+        console.log(err);
+      } else {
+        toast.error("Register Failed !");
+        console.log(err);
+      }
+    }
   };
 
   return (

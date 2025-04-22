@@ -2,13 +2,19 @@ import "express";
 
 export type CustomerPayload = {
   id: number;
-  role: "customer";
+  role: string;
+};
+
+export type OrganizerPayload = {
+  id: number;
+  role: string;
 };
 
 declare global {
   namespace Express {
     export interface Request {
       customer?: CustomerPayload;
+      organizer?: OrganizerPayload;
     }
   }
 }

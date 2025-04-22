@@ -1,6 +1,9 @@
 "use client";
 
+import axios from "@/lib/axios";
+import { AxiosError } from "axios";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -38,29 +41,28 @@ export default function LoginForm() {
     value: ILoginForm,
     action: FormikHelpers<ILoginForm>
   ) => {
-    // try {
-    //   // await axios.post("/login");
-    //   // router.push("/");
-    //   const { data } = await axios.post("/auth/login", value);
-    //   const user = data.data;
-    //   await signIn("credentials", {
-    //     redirectTo: "/",
-    //     id: user.id,
-    //     email: user.email,
-    //     username: user.username,
-    //     fullname: user.fullname,
-    //     avatar: user.avatar ?? "",
-    //     accessToken: data.access_token,
-    //   });
-    //   toast.success("Login Success !");
-    //   action.resetForm();
-    // } catch (err) {
-    //   console.log(err);
-    //   if (err instanceof AxiosError) {
-    //     // toast.error(err.response?.data?.error?.message || "Login Failed !");
-    //     toast.error(err.response?.data.message);
-    //   }
-    // }
+    try {
+      const { data } = await axios.post("/autho/login", value);
+      const user = data.data;
+
+      await signIn("credentials", {
+        redirectTo: "/",
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        fullname: user.fullname,
+        avatar: user.avatar ?? "",
+        role: user.role,
+        accessToken: data.access_token,
+      });
+      toast.success("Login Success !");
+      action.resetForm();
+    } catch (err) {
+      console.log(err);
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data.message);
+      }
+    }
   };
 
   return (

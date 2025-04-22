@@ -126,7 +126,44 @@ exports.Prisma.CustomerScalarFieldEnum = {
   avatar: 'avatar',
   isVerified: 'isVerified',
   refCode: 'refCode',
+  refBy: 'refBy',
+  role: 'role',
   createAt: 'createAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrganizerScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  password: 'password',
+  username: 'username',
+  fullname: 'fullname',
+  avatar: 'avatar',
+  isVerified: 'isVerified',
+  role: 'role',
+  createAt: 'createAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PointScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  points: 'points',
+  desc: 'desc',
+  customerId: 'customerId',
+  expiredAt: 'expiredAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DiscountScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  percen: 'percen',
+  customerId: 'customerId',
+  used: 'used',
+  expiredAt: 'expiredAt',
+  createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
@@ -144,10 +181,21 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.Role = exports.$Enums.Role = {
+  CUSTOMER: 'CUSTOMER',
+  ORGANIZER: 'ORGANIZER'
+};
 
+exports.TransType = exports.$Enums.TransType = {
+  EARN: 'EARN',
+  REDEEM: 'REDEEM'
+};
 
 exports.Prisma.ModelName = {
-  Customer: 'Customer'
+  Customer: 'Customer',
+  Organizer: 'Organizer',
+  Point: 'Point',
+  Discount: 'Discount'
 };
 
 /**

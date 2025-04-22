@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import prisma from "../prisma";
-import referralCode from "referral-codes";
 import { compare, genSalt, hash } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { transporter } from "../helpers/mailer";
@@ -8,27 +7,21 @@ import path from "path";
 import fs from "fs";
 import handlebars from "handlebars";
 
-export class AuthController {
-  async registerCustomer(req: Request, res: Response) {
+export class AuthoController {
+  async registerOrganizer(req: Request, res: Response) {
     try {
       const { fullname, username, email, password } = req.body;
-      const refCode = referralCode
-        .generate({
-          length: 7,
-          count: 1,
-        })
-        .toString();
 
       const salt = await genSalt(10);
       const hashedPass = await hash(password, salt);
 
-      const customer = await prisma.customer.create({
-        data: { fullname, username, email, password: hashedPass, refCode },
+      const organizer = await prisma.organizer.create({
+        data: { fullname, username, email, password: hashedPass },
       });
 
-      const payload = { id: customer.id, role: customer.role };
+      const payload = { id: organizer.id, role: organizer.role };
       const token = sign(payload, process.env.KEY_JWT!, { expiresIn: "10m" });
-      const link = `${process.env.URL_FE}/verify/${token}`;
+      const link = `${process.env.URL_FE}/verifyo/${token}`;
 
       const templatePath = path.join(__dirname, "../templates", `verify.hbs`);
       const templateSource = fs.readFileSync(templatePath, "utf-8");
@@ -49,25 +42,25 @@ export class AuthController {
     }
   }
 
-  async loginCustomer(req: Request, res: Response) {
+  async loginOrganizer(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
 
-      const customer = await prisma.customer.findUnique({ where: { email } });
-      if (!customer) throw { message: "User not found!" };
-      if (!customer.isVerified) throw { message: "Account not verified!" };
+      const organizer = await prisma.organizer.findUnique({ where: { email } });
+      if (!organizer) throw { message: "User not found!" };
+      if (!organizer.isVerified) throw { message: "Account not verified!" };
 
-      const isValidPass = await compare(password, customer.password);
+      const isValidPass = await compare(password, organizer.password);
       if (!isValidPass) throw { message: "Incorrect password!" };
 
-      const payload = { id: customer.id, role: customer.role };
+      const payload = { id: organizer.id, role: organizer.role };
       const access_token = sign(payload, process.env.KEY_JWT!, {
         expiresIn: "10m",
       });
 
       res.status(200).send({
         message: "Login successfully ✅",
-        data: customer,
+        data: organizer,
         access_token,
       });
     } catch (err) {
@@ -76,11 +69,11 @@ export class AuthController {
     }
   }
 
-  async verify(req: Request, res: Response) {
+  async verifyOrganizer(req: Request, res: Response) {
     try {
-      await prisma.customer.update({
+      await prisma.organizer.update({
         data: { isVerified: true },
-        where: { id: req.customer?.id },
+        where: { id: req.organizer?.id },
       });
 
       res.status(200).send({ message: "Verification Success!" });
