@@ -10,11 +10,8 @@ import MenuMobile from "./menum";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-
   const toggleMenu = () => setIsOpen(!isOpen);
-
   const { data: session } = useSession();
-
   const isLogin = !!session;
   return (
     <nav className="fixed top-0 bg-gradient-to-br from-orange-200 via-orange-300 to-orange-400 shadow-md w-screen z-50">
@@ -33,11 +30,10 @@ export default function Navbar() {
               />
             </Link>
           </div>
-
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-4 items-center">
             <Link
-              href="/crematch"
+              href="/match"
               className="text-gray-800 py-2 rounded-lg font-semibold transition duration-300 text-shadow-sm hover:text-white hover:text-shadow-gray-800"
             >
               Create Match
@@ -48,7 +44,6 @@ export default function Navbar() {
             >
               Discover Match
             </Link>
-
             {!isLogin ? (
               <MenuDesktop />
             ) : (
@@ -74,24 +69,46 @@ export default function Navbar() {
                     <div>{session.user.email}</div>
                   </div>
                 </button>
-
                 {/* Avatar Menu */}
                 {isOpen && (
-                  <div className="absolute right-4 mt-45 w-60 bg-gradient-to-br from-orange-300 to-orange-400 rounded-md shadow-lg py-1 font-semibold text-center">
-                    <Link
-                      href="/profile"
-                      className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
-                    >
-                      Profile
-                    </Link>
-                    <Link
-                      href="/ticket"
-                      className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
-                    >
-                      My Ticket
-                    </Link>
+                  <div
+                    className="absolute right-4 mt-45 w-60 bg-gradient-to-br from-orange-300 to-orange-400 rounded-b-md shadow-lg py-1 font-semibold text-center"
+                    onClick={toggleMenu}
+                  >
+                    {session.user.role === "CUSTOMER" && (
+                      <>
+                        <Link
+                          href={`/profile/${session.user.username}`}
+                          className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
+                        >
+                          Profile
+                        </Link>
+                        <Link
+                          href={`/profile/${session.user.username}/ticket`}
+                          className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
+                        >
+                          My Ticket
+                        </Link>
+                      </>
+                    )}
+                    {session.user.role === "ORGANIZER" && (
+                      <>
+                        <Link
+                          href={`/dashboard/${session.user.username}`}
+                          className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
+                        >
+                          Dashboard
+                        </Link>
+                        <Link
+                          href={`/dashboard/${session.user.username}/mymatch`}
+                          className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
+                        >
+                          My Match
+                        </Link>
+                      </>
+                    )}
                     <button
-                      onClick={() => signOut()}
+                      onClick={() => signOut({ callbackUrl: "/" })}
                       className="block w-full px-4 py-2 text-sm text-red-700 hover:bg-gray-300 cursor-pointer"
                     >
                       Sign Out
@@ -101,19 +118,23 @@ export default function Navbar() {
               </>
             )}
           </div>
-
           {/* Burger Icon */}
           <div className="md:hidden flex items-center">
-            <button onClick={toggleMenu} className="text-black font-bold">
+            <button
+              onClick={toggleMenu}
+              className="text-black font-bold cursor-pointer"
+            >
               {isOpen ? <CgCloseR size={24} /> : <CgMenuLeft size={24} />}
             </button>
           </div>
         </div>
       </div>
-
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden px-2 pt-2 pb-3 space-y-1 bg-gradient-to-br from-orange-200 to-orange-400 shadow-lg border-t">
+        <div
+          className="md:hidden px-2 pt-2 pb-3 space-y-1 bg-gradient-to-br from-orange-200 to-orange-400 shadow-lg border-t"
+          onClick={toggleMenu}
+        >
           {!isLogin ? (
             <MenuMobile />
           ) : (
@@ -135,21 +156,41 @@ export default function Navbar() {
                 <div>{session.user.email}</div>
               </div>
               <hr className="my-2 text-gray-600" />
-              <Link
-                href="/profile"
-                className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
-              >
-                Profile
-              </Link>
-              <Link
-                href="/ticket"
-                className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
-              >
-                My Ticket
-              </Link>
+              {session.user.role === "CUSTOMER" && (
+                <>
+                  <Link
+                    href={`/profile/${session.user.username}`}
+                    className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    href={`/profile/${session.user.username}/ticket`}
+                    className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
+                  >
+                    My Ticket
+                  </Link>
+                </>
+              )}
+              {session.user.role === "ORGANIZER" && (
+                <>
+                  <Link
+                    href={`/dashboard/${session.user.username}`}
+                    className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href={`/dashboard/${session.user.username}/mymatch`}
+                    className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
+                  >
+                    My Match
+                  </Link>
+                </>
+              )}
               <hr className="my-2 text-gray-600" />
               <button
-                onClick={() => signOut()}
+                onClick={() => signOut({ callbackUrl: "/" })}
                 className="block w-full px-4 py-2 text-sm text-red-700 hover:bg-gray-300 cursor-pointer"
               >
                 Sign Out
