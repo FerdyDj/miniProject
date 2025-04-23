@@ -35,15 +35,15 @@ export default function Sidebar() {
                 <BsPersonBadge className="w-5 h-5" />
                 My Profile
               </Link> 
-              <Link href="/coupon" className="flex items-center gap-3 rounded-md p-3 transition duration-300 hover:bg-gray-300">
+              <Link href={`/profile/${session.data.user.username}/coupon`} className="flex items-center gap-3 rounded-md p-3 transition duration-300 hover:bg-gray-300">
               <RiCoupon2Line className="w-5 h-5" />
                 My Coupon
               </Link>
-              <Link href="/ticket" className="flex items-center gap-3 rounded-md p-3 transition duration-300 hover:bg-gray-300">
+              <Link href={`/profile/${session.data.user.username}/ticket`} className="flex items-center gap-3 rounded-md p-3 transition duration-300 hover:bg-gray-300">
               <TiTicket className="w-5 h-5" />
                 My Ticket
               </Link>
-              <Link href="/payment" className="flex items-center gap-3 rounded-md p-3 transition duration-300 hover:bg-gray-300">
+              <Link href={`/profile/${session.data.user.username}/payment`} className="flex items-center gap-3 rounded-md p-3 transition duration-300 hover:bg-gray-300">
               <MdOutlinePayment className="w-5 h-5" />
                 Payment
               </Link>

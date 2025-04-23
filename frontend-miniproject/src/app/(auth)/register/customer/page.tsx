@@ -31,6 +31,7 @@ const RegSchema = yup.object().shape({
     .string()
     .required("Password confirmation is required!")
     .oneOf([yup.ref("password")], "Password not match!"),
+  referral: yup.string().notRequired(),
 });
 
 interface IRegForm {
@@ -39,6 +40,7 @@ interface IRegForm {
   email: string;
   password: string;
   confirm: string;
+  referral: string;
 }
 
 export default function Page() {
@@ -52,6 +54,7 @@ export default function Page() {
     email: "",
     password: "",
     confirm: "",
+    referral: "",
   };
 
   const onRegister = async (
@@ -96,10 +99,10 @@ export default function Page() {
                   <div className="relative">
                     <Field
                       name="fullname"
-                      className="peer mt-2 mb-1 px-2 py-4 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent "
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent "
                       placeholder="fullname"
                     />
-                    <label className="absolute transition-all duration-300 text-white text-sm left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 peer-placeholder-shown:text-base peer-placeholder-shown:top-6 pointer-events-none">
+                    <label className="absolute transition-all duration-300 text-white text-sm left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 peer-placeholder-shown:text-base peer-placeholder-shown:top-5 pointer-events-none">
                       Fullname
                     </label>
                     {touched.fullname && errors.fullname ? (
@@ -111,10 +114,10 @@ export default function Page() {
                   <div className="relative">
                     <Field
                       name="username"
-                      className="peer mt-2 mb-1 px-2 py-4 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent focus:ring-amber-300"
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent focus:ring-amber-300"
                       placeholder="username"
                     />
-                    <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-6 pointer-events-none">
+                    <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-5 pointer-events-none">
                       Username
                     </label>
                     {touched.username && errors.username ? (
@@ -127,10 +130,10 @@ export default function Page() {
                     <Field
                       name="email"
                       type="email"
-                      className="peer mt-2 mb-1 px-2 py-4 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent after:bg-black"
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent after:bg-black"
                       placeholder="email"
                     />
-                    <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-6 pointer-events-none">
+                    <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-5 pointer-events-none">
                       Email
                     </label>
                     {touched.email && errors.email ? (
@@ -145,7 +148,7 @@ export default function Page() {
                     <Field
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      className="peer mt-2 mb-1 px-2 py-4 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent"
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent"
                       placeholder="password"
                     />
                     <button
@@ -159,7 +162,7 @@ export default function Page() {
                         <AiFillEye size={20} />
                       )}
                     </button>
-                    <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-6 pointer-events-none">
+                    <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-5 pointer-events-none">
                       Password
                     </label>
                   </div>
@@ -174,7 +177,7 @@ export default function Page() {
                     <Field
                       name="confirm"
                       type={confirm ? "text" : "password"}
-                      className="peer mt-2 mb-1 px-2 py-4 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent"
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent"
                       placeholder="confirmpassword"
                     />
                     <button
@@ -188,7 +191,7 @@ export default function Page() {
                         <AiFillEye size={20} />
                       )}
                     </button>
-                    <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-6 pointer-events-none">
+                    <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-5 pointer-events-none">
                       Password Confirmation
                     </label>
                   </div>
@@ -198,10 +201,25 @@ export default function Page() {
                     </div>
                   ) : null}
                 </div>
+                <div className="relative">
+                    <Field
+                      name="referral"
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent focus:ring-amber-300"
+                      placeholder="referral"
+                    />
+                    <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-5 pointer-events-none">
+                      Referral (Optional)
+                    </label>
+                    {touched.referral && errors.referral ? (
+                      <div className="text-red-500 text-[12px]">
+                        {errors.referral}
+                      </div>
+                    ) : null}
+                  </div>
 
                 <div className="mt-4 w-full">
                   <button
-                    className="text-orange-500 font-bold py-4 px-2 rounded-sm bg-black-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-lg border-2 border-orange-400 w-full cursor-pointer hover:bg-orange-400 hover:text-gray-800 transition duration-300 text-shadow-sm"
+                    className="text-orange-500 font-bold py-3 px-2 rounded-sm bg-black-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-lg border-2 border-orange-400 w-full cursor-pointer hover:bg-orange-400 hover:text-gray-800 transition duration-300 text-shadow-sm"
                     type="submit"
                     disabled={isSubmitting}
                   >

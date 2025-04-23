@@ -48,73 +48,59 @@ export default function Navbar() {
               <MenuDesktop />
             ) : (
               <>
-                <button
-                  onClick={toggleMenu}
-                  className="flex items-center gap-3 cursor-pointer"
-                >
-                  <div>
-                    <Image
-                      src={
-                        session.user.avatar ||
-                        "https://res.cloudinary.com/dexlqslwj/image/upload/v1744257672/blank-image_yfczs3_ogl5pp.jpg"
-                      }
-                      height={40}
-                      width={40}
-                      alt="avatar"
-                      className="rounded-full"
-                    />
-                  </div>
-                  <div className="text-gray-800 font-medium text-left text-sm">
-                    <div>{session.user?.fullname}</div>
-                    <div>{session.user.email}</div>
-                  </div>
-                </button>
-                {/* Avatar Menu */}
-                {isOpen && (
-                  <div
-                    className="absolute right-4 mt-45 w-60 bg-gradient-to-br from-orange-300 to-orange-400 rounded-b-md shadow-lg py-1 font-semibold text-center"
+                <div className="relative">
+                  <button
                     onClick={toggleMenu}
+                    className="flex items-center gap-3 cursor-pointer w-full"
                   >
-                    {session.user.role === "CUSTOMER" && (
-                      <>
+                    <div>
+                      <Image
+                        src={
+                          session.user.avatar ||
+                          "https://res.cloudinary.com/dexlqslwj/image/upload/v1744257672/blank-image_yfczs3_ogl5pp.jpg"
+                        }
+                        height={40}
+                        width={40}
+                        alt="avatar"
+                        className="rounded-full"
+                      />
+                    </div>
+                    <div className="text-gray-800 font-medium text-left text-sm">
+                      <div>{session.user?.fullname}</div>
+                      <div>{session.user.email}</div>
+                    </div>
+                  </button>
+                  {/* Avatar Menu */}
+                  {isOpen && (
+                    <div
+                      className="absolute right-0 top-13 w-full bg-gradient-to-br from-orange-300 to-orange-400 rounded-b-md shadow-lg py-1 font-semibold text-center"
+                      onClick={toggleMenu}
+                    >
+                      {session.user.role === "CUSTOMER" && (
                         <Link
                           href={`/profile/${session.user.username}`}
                           className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
                         >
                           Profile
                         </Link>
-                        <Link
-                          href={`/profile/${session.user.username}/ticket`}
-                          className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
-                        >
-                          My Ticket
-                        </Link>
-                      </>
-                    )}
-                    {session.user.role === "ORGANIZER" && (
-                      <>
+                      )}
+                      {session.user.role === "ORGANIZER" && (
                         <Link
                           href={`/dashboard/${session.user.username}`}
                           className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
                         >
                           Dashboard
                         </Link>
-                        <Link
-                          href={`/dashboard/${session.user.username}/mymatch`}
-                          className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
-                        >
-                          My Match
-                        </Link>
-                      </>
-                    )}
-                    <button
-                      onClick={() => signOut({ callbackUrl: "/" })}
-                      className="block w-full px-4 py-2 text-sm text-red-700 hover:bg-gray-300 cursor-pointer"
-                    >
-                      Sign Out
-                    </button>
-                  </div>
-                )}
+                      )}
+                      <button
+                        onClick={() => signOut({ callbackUrl: "/" })}
+                        className="block w-full px-4 py-2 text-sm text-red-700 hover:bg-gray-300 cursor-pointer"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
               </>
             )}
           </div>
@@ -157,36 +143,20 @@ export default function Navbar() {
               </div>
               <hr className="my-2 text-gray-600" />
               {session.user.role === "CUSTOMER" && (
-                <>
-                  <Link
-                    href={`/profile/${session.user.username}`}
-                    className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
-                  >
-                    Profile
-                  </Link>
-                  <Link
-                    href={`/profile/${session.user.username}/ticket`}
-                    className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
-                  >
-                    My Ticket
-                  </Link>
-                </>
+                <Link
+                  href={`/profile/${session.user.username}`}
+                  className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
+                >
+                  Profile
+                </Link>
               )}
               {session.user.role === "ORGANIZER" && (
-                <>
-                  <Link
-                    href={`/dashboard/${session.user.username}`}
-                    className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
-                  >
-                    Dashboard
-                  </Link>
-                  <Link
-                    href={`/dashboard/${session.user.username}/mymatch`}
-                    className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
-                  >
-                    My Match
-                  </Link>
-                </>
+                <Link
+                  href={`/dashboard/${session.user.username}`}
+                  className="block w-full px-4 py-2 text-sm text-gray-800 hover:bg-gray-300 transition duration-300"
+                >
+                  Dashboard
+                </Link>
               )}
               <hr className="my-2 text-gray-600" />
               <button
