@@ -20,7 +20,7 @@ export class AuthoController {
       });
 
       const payload = { id: organizer.id, role: organizer.role };
-      const token = sign(payload, process.env.KEY_JWT!, { expiresIn: "10m" });
+      const token = sign(payload, process.env.KEY_JWT!, { expiresIn: "1d" });
       const link = `${process.env.URL_FE}/verifyo/${token}`;
 
       const templatePath = path.join(__dirname, "../templates", `verify.hbs`);
