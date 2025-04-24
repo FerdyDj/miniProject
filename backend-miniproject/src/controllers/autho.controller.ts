@@ -55,7 +55,7 @@ export class AuthoController {
 
       const payload = { id: organizer.id, role: organizer.role };
       const access_token = sign(payload, process.env.KEY_JWT!, {
-        expiresIn: "10m",
+        expiresIn: "1d",
       });
 
       res.status(200).send({

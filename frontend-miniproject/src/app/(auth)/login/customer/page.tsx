@@ -83,7 +83,7 @@ export default function LoginForm() {
                   <Field
                     name="email"
                     type="email"
-                    className="peer mt-2 mb-1 px-2 py-4 border border-orange-500 rounded-sm shadow-md w-full placeholder-transparent"
+                    className="peer mt-2 mb-1 px-2 py-4 border border-orange-500 rounded-sm w-full placeholder-transparent"
                     placeholder="email"
                   />
                   <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-6 peer-placeholder-shown:px-0 pointer-events-none">
@@ -100,7 +100,7 @@ export default function LoginForm() {
                     <Field
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      className="peer mt-2 mb-1 px-2 py-4 pr-10 border border-orange-500 rounded-sm shadow-md w-full placeholder-transparent"
+                      className="peer mt-2 mb-1 px-2 py-4 pr-10 border border-orange-500 rounded-sm w-full placeholder-transparent"
                       placeholder="password"
                     />
                     <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-6 pointer-events-none">

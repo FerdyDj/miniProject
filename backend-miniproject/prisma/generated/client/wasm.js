@@ -147,9 +147,7 @@ exports.Prisma.OrganizerScalarFieldEnum = {
 
 exports.Prisma.PointScalarFieldEnum = {
   id: 'id',
-  type: 'type',
-  points: 'points',
-  desc: 'desc',
+  amount: 'amount',
   customerId: 'customerId',
   expiredAt: 'expiredAt',
   createdAt: 'createdAt',
@@ -162,6 +160,44 @@ exports.Prisma.DiscountScalarFieldEnum = {
   percen: 'percen',
   customerId: 'customerId',
   used: 'used',
+  expiredAt: 'expiredAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EventScalarFieldEnum = {
+  id: 'id',
+  image: 'image',
+  title: 'title',
+  category: 'category',
+  organizerId: 'organizerId',
+  eventDate: 'eventDate',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  location: 'location',
+  venue: 'venue',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TicketScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  category: 'category',
+  price: 'price',
+  quantity: 'quantity',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrderScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  ticketId: 'ticketId',
+  qty: 'qty',
+  amount: 'amount',
+  status: 'status',
   expiredAt: 'expiredAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -186,16 +222,34 @@ exports.Role = exports.$Enums.Role = {
   ORGANIZER: 'ORGANIZER'
 };
 
-exports.TransType = exports.$Enums.TransType = {
-  EARN: 'EARN',
-  REDEEM: 'REDEEM'
+exports.EventCategory = exports.$Enums.EventCategory = {
+  FRIENDLY: 'FRIENDLY',
+  LEAGUE: 'LEAGUE',
+  CHAMPIONSHIP: 'CHAMPIONSHIP'
+};
+
+exports.TicketCategory = exports.$Enums.TicketCategory = {
+  EAST: 'EAST',
+  WEST: 'WEST',
+  SOUTH: 'SOUTH',
+  NORTH: 'NORTH'
+};
+
+exports.StatusOrder = exports.$Enums.StatusOrder = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  EXPIRED: 'EXPIRED',
+  CANCEL: 'CANCEL'
 };
 
 exports.Prisma.ModelName = {
   Customer: 'Customer',
   Organizer: 'Organizer',
   Point: 'Point',
-  Discount: 'Discount'
+  Discount: 'Discount',
+  Event: 'Event',
+  Ticket: 'Ticket',
+  Order: 'Order'
 };
 
 /**

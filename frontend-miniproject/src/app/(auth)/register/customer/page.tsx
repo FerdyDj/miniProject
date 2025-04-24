@@ -31,7 +31,7 @@ const RegSchema = yup.object().shape({
     .string()
     .required("Password confirmation is required!")
     .oneOf([yup.ref("password")], "Password not match!"),
-  referral: yup.string().notRequired(),
+  refBy: yup.string().notRequired(),
 });
 
 interface IRegForm {
@@ -40,7 +40,7 @@ interface IRegForm {
   email: string;
   password: string;
   confirm: string;
-  referral: string;
+  refBy: string;
 }
 
 export default function Page() {
@@ -54,7 +54,7 @@ export default function Page() {
     email: "",
     password: "",
     confirm: "",
-    referral: "",
+    refBy: "",
   };
 
   const onRegister = async (
@@ -99,7 +99,7 @@ export default function Page() {
                   <div className="relative">
                     <Field
                       name="fullname"
-                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent "
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm w-full placeholder-transparent "
                       placeholder="fullname"
                     />
                     <label className="absolute transition-all duration-300 text-white text-sm left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 peer-placeholder-shown:text-base peer-placeholder-shown:top-5 pointer-events-none">
@@ -114,7 +114,7 @@ export default function Page() {
                   <div className="relative">
                     <Field
                       name="username"
-                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent focus:ring-amber-300"
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm w-full placeholder-transparent"
                       placeholder="username"
                     />
                     <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-5 pointer-events-none">
@@ -130,7 +130,7 @@ export default function Page() {
                     <Field
                       name="email"
                       type="email"
-                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent after:bg-black"
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm w-full placeholder-transparent after:bg-black"
                       placeholder="email"
                     />
                     <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-5 pointer-events-none">
@@ -148,7 +148,7 @@ export default function Page() {
                     <Field
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent"
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm w-full placeholder-transparent"
                       placeholder="password"
                     />
                     <button
@@ -177,7 +177,7 @@ export default function Page() {
                     <Field
                       name="confirm"
                       type={confirm ? "text" : "password"}
-                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent"
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm w-full placeholder-transparent"
                       placeholder="confirmpassword"
                     />
                     <button
@@ -203,16 +203,16 @@ export default function Page() {
                 </div>
                 <div className="relative">
                     <Field
-                      name="referral"
-                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm shadow-md w-full placeholder-transparent focus:ring-amber-300"
+                      name="refBy"
+                      className="peer mt-2 mb-1 px-2 py-3 border border-orange-400 text-white rounded-sm w-full placeholder-transparent"
                       placeholder="referral"
                     />
                     <label className="absolute transition-all duration-300 left-2 -top-1 bg-black px-2 peer-placeholder-shown:px-0 text-white text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-5 pointer-events-none">
                       Referral (Optional)
                     </label>
-                    {touched.referral && errors.referral ? (
+                    {touched.refBy && errors.refBy ? (
                       <div className="text-red-500 text-[12px]">
-                        {errors.referral}
+                        {errors.refBy}
                       </div>
                     ) : null}
                   </div>
