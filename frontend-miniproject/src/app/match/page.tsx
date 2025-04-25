@@ -5,11 +5,12 @@ import { AxiosError } from "axios";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
 const CreateSchema = yup.object().shape({
-  image: yup.string().required("Image is required!"),
+  image: yup.mixed().required("Image is required!"),
   title: yup.string().required("Title is required!"),
   category: yup.string().required("Category is required!"),
   eventDate: yup.string().required("Event date is required!"),
@@ -21,7 +22,7 @@ const CreateSchema = yup.object().shape({
 });
 
 interface ICreateForm {
-  image: string;
+  image: File | null;
   title: string;
   category: string;
   eventDate: string;
@@ -33,10 +34,11 @@ interface ICreateForm {
 }
 
 export default function Page() {
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const user = useSession();
   const router = useRouter();
   const initialValues: ICreateForm = {
-    image: "",
+    image: null,
     title: "",
     category: "",
     eventDate: "",
@@ -52,12 +54,24 @@ export default function Page() {
     action: FormikHelpers<ICreateForm>
   ) => {
     try {
-      const { data } = await axios.post("/events/cloud", value, {
+      const formData = new FormData();
+      formData.append("image", value.image as File);
+      formData.append("title", value.title);
+      formData.append("category", value.category);
+      formData.append("eventDate", value.eventDate);
+      formData.append("startTime", value.startTime);
+      formData.append("endTime", value.endTime);
+      formData.append("location", value.location);
+      formData.append("venue", value.venue);
+      formData.append("description", value.description);
+
+      const { data } = await axios.post("/events/cloud", formData, {
         headers: {
           Authorization: `Bearer ${user.data?.accessToken}`,
         },
       });
       action.resetForm();
+      setSelectedImage(null);
       toast.success(data.message);
       router.push("/dashboard");
     } catch (err) {
@@ -71,6 +85,13 @@ export default function Page() {
     }
   };
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const f = event.target.files?.[0];
+    if (f) {
+      setSelectedImage(f);
+    }
+  };
+
   return (
     <div className="flex justify-center h-screen w-screen mt-16">
       <div className="flex flex-col items-center justify-center w-[90%] md:w-[850px] rounded-sm pb-8 h-full">
@@ -80,7 +101,7 @@ export default function Page() {
           onSubmit={onCreate}
         >
           {(props: FormikProps<ICreateForm>) => {
-            const { touched, errors, isSubmitting } = props;
+            const { touched, errors, isSubmitting, setFieldValue } = props;
             return (
               <Form
                 className="container w-full md:w-[70%] px-8 md:px-0"
@@ -94,10 +115,16 @@ export default function Page() {
                     <label htmlFor="image" className="text-white font-semibold">
                       Match Image
                     </label>
-                    <Field
+                    <input
                       name="image"
                       type="file"
                       className="mt-2 mb-1 px-2 py-3 border border-orange-400 rounded-sm w-full bg-slate-200"
+                      accept="image/png, image/jpeg, image/webp"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        setFieldValue("image", f);
+                        handleImageChange(e);
+                      }}
                     />
                     {touched.image && errors.image ? (
                       <div className="text-red-500 text-[12px]">
@@ -133,9 +160,9 @@ export default function Page() {
                       <Field
                         name="category"
                         as="select"
-                        className="mt-2 mb-1 px-2 py-3 border border-orange-400 rounded-sm w-full bg-slate-200"
+                        className="mt-2 mb-1 px-2 py-3 border border-orange-400 rounded-sm w-full bg-slate-200 text-center"
                       >
-                        <option value="">~ Choose Category ~</option>
+                        <option value="">Category</option>
                         <option value="FRIENDLY">Friendly Match</option>
                         <option value="LEAGUE">League Match</option>
                         <option value="CHAMPIONSHIP">Championship Match</option>

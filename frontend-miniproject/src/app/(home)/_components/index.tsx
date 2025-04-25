@@ -1,7 +1,11 @@
+import DataCarouselComponent from "./carousel";
+import Hero from "./hero";
+
 export default function HomePage(){
     return(
-        <div className="mt-20 text-white">
-            Homepage Section
+        <div className="max-w-screen min-h-screen">
+            <Hero />
+            <DataCarouselComponent />
         </div>
     )
 }

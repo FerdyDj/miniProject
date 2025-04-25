@@ -31,7 +31,7 @@ const rewardRouter = new RewardRouter();
 app.use("/api/rewards", rewardRouter.getRouter());
 
 const eventRouter = new EventRouter();
-app.use("api/events", eventRouter.getRouter());
+app.use("/api/events", eventRouter.getRouter());
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

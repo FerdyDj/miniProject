@@ -78,8 +78,8 @@ model Event {
   category    EventCategory
   organizerId Int
   eventDate   DateTime
-  startTime   DateTime      @db.Time()
-  endTime     DateTime      @db.Time()
+  startTime   String
+  endTime     String
   location    String
   venue       String
   description String        @db.Text

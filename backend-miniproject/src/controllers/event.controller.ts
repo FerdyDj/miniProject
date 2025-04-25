@@ -17,13 +17,13 @@ export class EventController {
         description,
       } = req.body;
       const { secure_url } = await cloudinaryUpload(req.file, "HoopPass");
-
+      
       await prisma.event.create({
         data: {
           image: secure_url,
           title,
           category,
-          eventDate,
+          eventDate: new Date(eventDate),
           startTime,
           endTime,
           location,
