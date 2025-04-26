@@ -1,6 +1,6 @@
-import Sidebar from "@/components/sidebar";
+import SidebarMatch from "@/components/sidebarm";
 
-export default function ProfileLayout({
+export default function DismatchLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -8,8 +8,8 @@ export default function ProfileLayout({
   return (
     <>
       <div className="flex-row md:flex w-screen">
-        <Sidebar />
-        {children}
+        <SidebarMatch />
+        {children}  
       </div>
     </>
   );

@@ -19,6 +19,7 @@ interface IEvents {
 export default async function Page() {
   const response = await axios.get("/events");
   const events: IEvents[] = response.data.data;
+  const championship = events.filter((e) => e.category === "CHAMPIONSHIP");
 
   return (
     <div className="p-5 md:p-10">
@@ -26,8 +27,8 @@ export default async function Page() {
         All Category
       </h2>
       <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-        {events.length > 0 ? (
-          events.map((event) => (
+        {championship.length > 0 ? (
+          championship.map((event) => (
             <div
               key={event.id}
               className="w-auto h-auto rounded-lg shadow-md text-white border border-orange-400 relative"
@@ -66,7 +67,7 @@ export default async function Page() {
             </div>
           ))
         ) : (
-          <div className="p-0 md:p-8">There is no Match Available</div>
+          <div className="p-0 md:p-8 text-white">There is no Match Available</div>
         )}
       </div>
     </div>

@@ -5,6 +5,7 @@ import { AuthoRouter } from "./routers/autho.router";
 import { RewardRouter } from "./routers/reward.router";
 import { EventRouter } from "./routers/event.router";
 import path from "path";
+import { OrganizerRouter } from "./routers/organizer.router";
 
 const PORT: number = 8000;
 
@@ -32,6 +33,9 @@ app.use("/api/rewards", rewardRouter.getRouter());
 
 const eventRouter = new EventRouter();
 app.use("/api/events", eventRouter.getRouter());
+
+const organizerRouter = new OrganizerRouter();
+app.use("/api/organizers", organizerRouter.getRouter());
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

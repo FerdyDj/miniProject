@@ -1,4 +1,5 @@
 import axios from "@/lib/axios";
+import Image from "next/image";
 import Marquee from "react-fast-marquee";
 
 interface IEvents {
@@ -12,6 +13,9 @@ interface IEvents {
 export default async function DataCarousel() {
   const response = await axios.get("/events");
   const events: IEvents[] = response.data.data;
+  const championship = events.filter((e) => e.category === "CHAMPIONSHIP");
+  const league = events.filter((e) => e.category === "LEAGUE");
+  const friendly = events.filter((e) => e.category === "FRIENDLY");
 
   return (
     <div className="p-5 md:p-10">
@@ -26,92 +30,140 @@ export default async function DataCarousel() {
         gradientWidth={50}
       >
         <div className="p-4 flex justify-center gap-3">
-          {events.length > 0
-            ? events.map((event) => (
-                <div
-                  key={event.id}
-                  className="w-[300px] h-[250px] rounded-lg shadow-md p-4 text-white"
-                >
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-[150px] object-cover rounded-md mb-2"
-                  />
-                  <h3 className="text-lg font-semibold">{event.title}</h3>
-                  <p className="text-sm text-gray-300">
-                    {new Date(event.eventDate).toDateString()}
-                  </p>
-                </div>
-              ))
-            : "Not Available"}
+          {events.length > 0 ? (
+            events.map((event) => (
+              <div
+                key={event.id}
+                className="w-[300px] h-[250px] rounded-lg shadow-md p-4 text-white relative"
+              >
+                <h3 className="absolute font-semibold right-4 top-5.5 px-2 bg-orange-600 rounded-l-md">
+                  {event.category}
+                </h3>
+                <Image
+                  src={event.image}
+                  alt={event.title}
+                  width={300}
+                  height={200}
+                  className="object-cover w-full rounded-md mb-2"
+                />
+                <h3 className="text-lg font-semibold">{event.title}</h3>
+                <p className="text-sm text-gray-300">
+                  {new Date(event.eventDate).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
+            ))
+          ) : (
+            <div className="p-0 md:p-8">There is no Match Available</div>
+          )}
         </div>
       </Marquee>
       <h2 className="text-2xl font-bold text-white p-2 md:p-8">
         Championship Match
       </h2>
-      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {events.length > 0
-          ? events.map((event) => (
-              <div
-                key={event.id}
-                className="w-[300px] h-[250px] rounded-lg shadow-md p-4 text-white"
-              >
-                <img
-                  src={event.image}
-                  alt={event.title}
-                  className="w-full h-[150px] object-cover rounded-md mb-2"
-                />
-                <h3 className="text-lg font-semibold">{event.title}</h3>
-                <p className="text-sm text-gray-300">
-                  {new Date(event.eventDate).toDateString()}
-                </p>
-              </div>
-            ))
-          : "Not Available"}
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-white">
+        {championship.length > 0 ? (
+          championship.map((event) => (
+            <div
+              key={event.id}
+              className="w-auto h-auto rounded-lg shadow-md p-4 relative"
+            >
+              <h3 className="absolute font-semibold right-4 top-5.5 px-2 bg-orange-600 rounded-l-md">
+                {event.category}
+              </h3>
+              <Image
+                src={event.image}
+                alt={event.title}
+                width={300}
+                height={200}
+                className="object-cover w-full rounded-md mb-2"
+              />
+              <h3 className="text-lg font-semibold">{event.title}</h3>
+              <p className="text-sm text-gray-300">
+                {new Date(event.eventDate).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+          ))
+        ) : (
+          <div className="p-0 md:p-4">There is no Championship Match</div>
+        )}
       </div>
       <h2 className="text-2xl font-bold text-white p-2 md:p-8">League Match</h2>
-      <div className="p-4 flex justify-center gap-3">
-        {events.length > 0
-          ? events.map((event) => (
-              <div
-                key={event.id}
-                className="w-[300px] h-[250px] rounded-lg shadow-md p-4 text-white"
-              >
-                <img
-                  src={event.image}
-                  alt={event.title}
-                  className="w-full h-[150px] object-cover rounded-md mb-2"
-                />
-                <h3 className="text-lg font-semibold">{event.title}</h3>
-                <p className="text-sm text-gray-300">
-                  {new Date(event.eventDate).toDateString()}
-                </p>
-              </div>
-            ))
-          : "Not Available"}
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-white">
+        {league.length > 0 ? (
+          league.map((event) => (
+            <div
+              key={event.id}
+              className="w-auto h-auto rounded-lg shadow-md p-4 relative"
+            >
+              <h3 className="absolute font-semibold right-4 top-5.5 px-2 bg-orange-600 rounded-l-md">
+                {event.category}
+              </h3>
+              <Image
+                src={event.image}
+                alt={event.title}
+                width={300}
+                height={200}
+                className="object-cover w-full rounded-md mb-2"
+              />
+              <h3 className="text-lg font-semibold">{event.title}</h3>
+              <p className="text-sm text-gray-300">
+                {new Date(event.eventDate).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+          ))
+        ) : (
+          <div className="p-0 md:p-4">There is no League Match</div>
+        )}
       </div>
       <h2 className="text-2xl font-bold text-white p-2 md:p-8">
         Friendly Match
       </h2>
-      <div className="p-4 flex justify-center gap-3">
-        {events.length > 0
-          ? events.map((event) => (
-              <div
-                key={event.id}
-                className="w-[300px] h-[250px] rounded-lg shadow-md p-4 text-white"
-              >
-                <img
-                  src={event.image}
-                  alt={event.title}
-                  className="w-full h-[150px] object-cover rounded-md mb-2"
-                />
-                <h3 className="text-lg font-semibold">{event.title}</h3>
-                <p className="text-sm text-gray-300">
-                  {new Date(event.eventDate).toDateString()}
-                </p>
-              </div>
-            ))
-          : "Not Available"}
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-white">
+        {friendly.length > 0 ? (
+          friendly.map((event) => (
+            <div
+              key={event.id}
+              className="w-auto h-auto rounded-lg shadow-md p-4 relative"
+            >
+              <h3 className="absolute font-semibold right-4 top-5.5 px-2 bg-orange-600 rounded-l-md">
+                {event.category}
+              </h3>
+              <Image
+                src={event.image}
+                alt={event.title}
+                width={300}
+                height={200}
+                className="object-cover w-full rounded-md mb-2"
+              />
+              <h3 className="text-lg font-semibold">{event.title}</h3>
+              <p className="text-sm text-gray-300">
+                {new Date(event.eventDate).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+          ))
+        ) : (
+          <div className="p-0 md:p-4">There is no Friendly Match</div>
+        )}
       </div>
     </div>
   );

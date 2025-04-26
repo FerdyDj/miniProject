@@ -59,6 +59,7 @@ export class EventController {
           organizer: {
             select: {
               fullname: true,
+              avatar: true,
             },
           },
         },

@@ -5,6 +5,7 @@ import Navbar from "../components/navbar";
 import { Bounce, ToastContainer } from "react-toastify";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/lib/auth";
+import Footbar from "@/components/footbar";
 
 const figTree = Figtree({
   variable: "--font-figtree",
@@ -38,6 +39,7 @@ export default async function RootLayout({
             transition={Bounce}
             closeOnClick
           />
+          <Footbar />
         </SessionProvider>
       </body>
     </html>

@@ -105,7 +105,7 @@ export default function Navbar() {
             )}
           </div>
           {/* Burger Icon */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center px-7">
             <button
               onClick={toggleMenu}
               className="text-black font-bold cursor-pointer"
