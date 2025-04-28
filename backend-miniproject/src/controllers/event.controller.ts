@@ -75,4 +75,21 @@ export class EventController {
       res.status(400).send(err);
     }
   }
+
+  async getEventById (req: Request, res: Response){
+    try {
+      const { id } = req.params;
+      const events = await prisma.event.findUnique({ where: { id: id } });
+
+      if (!events) throw { message: "Event not found!" };
+
+      res.status(200).send({
+        message: "Event detail",
+        events,
+      });
+    } catch (err) {
+      console.log(err)
+      res.status(400).send(err);
+    }
+  }
 }

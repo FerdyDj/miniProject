@@ -13,9 +13,14 @@ interface IEvents {
 export default async function DataCarousel() {
   const response = await axios.get("/events");
   const events: IEvents[] = response.data.data;
-  const championship = events.filter((e) => e.category === "CHAMPIONSHIP");
-  const league = events.filter((e) => e.category === "LEAGUE");
-  const friendly = events.filter((e) => e.category === "FRIENDLY");
+
+  const currentDate = new Date();
+
+  // Filter events that haven't passed the eventDate
+  const upcomingEvents = events.filter((e) => new Date(e.eventDate) >= currentDate);
+  const championship = upcomingEvents.filter((e) => e.category === "CHAMPIONSHIP");
+  const league = upcomingEvents.filter((e) => e.category === "LEAGUE");
+  const friendly = upcomingEvents.filter((e) => e.category === "FRIENDLY");
 
   return (
     <div className="p-5 md:p-10">
@@ -30,8 +35,8 @@ export default async function DataCarousel() {
         gradientWidth={50}
       >
         <div className="p-4 flex justify-center gap-3">
-          {events.length > 0 ? (
-            events.map((event) => (
+          {upcomingEvents.length > 0 ? (
+            upcomingEvents.map((event) => (
               <div
                 key={event.id}
                 className="w-[300px] h-[250px] rounded-lg shadow-md p-4 text-white relative"

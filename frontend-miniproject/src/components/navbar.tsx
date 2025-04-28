@@ -4,21 +4,32 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { CgCloseR, CgMenuLeft } from "react-icons/cg";
+import { CgCloseR, CgMenuLeft, CgSearch } from "react-icons/cg";
 import MenuDesktop from "./menud";
 import MenuMobile from "./menum";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenSearch, setIsOpenSearch] = useState(false);
+  const toggleMenuSearch = () => setIsOpenSearch(!isOpenSearch);
+  const [searchQuery, setSearchQuery] = useState("");
   const toggleMenu = () => setIsOpen(!isOpen);
   const { data: session } = useSession();
   const isLogin = !!session;
+  const router = useRouter();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      router.push(`/dismatch?search=${searchQuery}`);
+    }
+  };
   return (
     <nav className="fixed top-0 bg-gradient-to-br from-orange-200 via-orange-300 to-orange-400 shadow-md w-screen z-50">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex">
             <Link href="/" className="text-xl font-bold text-gray-800">
               <Image
                 src="/NewHoopPass.svg"
@@ -31,16 +42,37 @@ export default function Navbar() {
             </Link>
           </div>
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-4 items-center">
+          <div className="hidden lg:flex space-x-4 items-center">
+            <div className="flex items-center">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch();
+                  }
+                }}
+                placeholder="Search for matches..."
+                className="px-4 py-2 rounded-sm bg-gray-200 mr-4"
+              />
+
+              <button
+                onClick={handleSearch}
+                className="bg-orange-500 text-white px-4 py-2 rounded-sm hover:bg-orange-400"
+              >
+                Search
+              </button>
+            </div>
             <Link
               href="/match"
-              className="text-gray-800 py-2 rounded-lg font-semibold transition duration-300 text-shadow-sm hover:text-white hover:text-shadow-gray-800"
+              className="text-gray-800 pl-2 py-2 rounded-lg font-semibold transition duration-300 text-shadow-sm hover:text-white hover:text-shadow-gray-800"
             >
               Create Match
             </Link>
             <Link
               href="/dismatch"
-              className="text-gray-800 px-4 py-2 rounded-lg font-semibold transition duration-300 text-shadow-sm hover:text-white hover:text-shadow-gray-800"
+              className="text-gray-800 px-2 py-2 rounded-lg font-semibold transition duration-300 text-shadow-sm hover:text-white hover:text-shadow-gray-800"
             >
               Discover Match
             </Link>
@@ -105,7 +137,36 @@ export default function Navbar() {
             )}
           </div>
           {/* Burger Icon */}
-          <div className="md:hidden flex items-center px-7">
+          <div className="lg:hidden flex items-center px-7">
+            {isOpenSearch && (
+              <div className="flex items-center mr-4">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSearch();
+                    }
+                  }}
+                  placeholder="Search for matches..."
+                  className="px-4 py-2 rounded-sm bg-gray-200 mr-4"
+                />
+
+                <button
+                  onClick={handleSearch}
+                  className="bg-orange-500 text-white px-4 py-2 rounded-sm hover:bg-orange-400"
+                >
+                  Search
+                </button>
+              </div>
+            )}
+            <button
+              onClick={toggleMenuSearch}
+              className="text-white font-bold cursor-pointer mx-4"
+            >
+              {isOpenSearch ? <CgCloseR size={24} /> : <CgSearch size={24} />}
+            </button>
             <button
               onClick={toggleMenu}
               className="text-black font-bold cursor-pointer"
@@ -118,7 +179,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <div
-          className="md:hidden px-2 pt-2 pb-3 space-y-1 bg-gradient-to-br from-orange-200 to-orange-400 shadow-lg border-t"
+          className="lg:hidden px-2 pt-2 pb-3 space-y-1 bg-gradient-to-br from-orange-200 to-orange-400 shadow-lg border-t"
           onClick={toggleMenu}
         >
           {!isLogin ? (

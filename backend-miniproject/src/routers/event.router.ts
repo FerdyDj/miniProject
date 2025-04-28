@@ -17,6 +17,11 @@ export class EventRouter {
 
   private InitialiazeRoute() {
     this.router.get("/", this.eventController.getEvent);
+    this.router.get(
+      "/:id",
+      this.authMiddleware.verifyTokenOrganizer,
+      this.eventController.getEventById
+    );
     this.router.post(
       "/cloud",
       uploader("memoryStorage", "hp-").single("image"),
