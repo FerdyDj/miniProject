@@ -6,6 +6,8 @@ import { RewardRouter } from "./routers/reward.router";
 import { EventRouter } from "./routers/event.router";
 import path from "path";
 import { OrganizerRouter } from "./routers/organizer.router";
+import { OrderRouter } from "./routers/order.router";
+import { TicketRouter } from "./routers/ticket.router";
 
 const PORT: number = 8000;
 
@@ -20,7 +22,7 @@ app.get("/api", (req: Request, res: Response) => {
   });
 });
 
-app.use("/api/public", express.static(path.join(__dirname, "../public")))
+app.use("/api/public", express.static(path.join(__dirname, "../public")));
 
 const authRouter = new AuthRouter();
 app.use("/api/auth", authRouter.getRouter());
@@ -36,6 +38,12 @@ app.use("/api/events", eventRouter.getRouter());
 
 const organizerRouter = new OrganizerRouter();
 app.use("/api/organizers", organizerRouter.getRouter());
+
+const orderRouter = new OrderRouter();
+app.use("/api/orders", orderRouter.getRouter());
+
+const ticketRouter = new TicketRouter();
+app.use("/api/tickets", ticketRouter.getRouter());
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

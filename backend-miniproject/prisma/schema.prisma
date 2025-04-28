@@ -109,7 +109,8 @@ model Order {
   ticketId   String
   qty        Int
   amount     Int
-  status     StatusOrder
+  status     StatusOrder @default(PENDING)
+  invoiceUrl String?
   expiredAt  DateTime
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt

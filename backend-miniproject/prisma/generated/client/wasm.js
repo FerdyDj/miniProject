@@ -198,6 +198,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   qty: 'qty',
   amount: 'amount',
   status: 'status',
+  invoiceUrl: 'invoiceUrl',
   expiredAt: 'expiredAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
