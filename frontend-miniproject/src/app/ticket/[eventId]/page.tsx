@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import axios from "@/lib/axios";
 import Image from "next/image";
+import AddTicketModal from "./_components/ticket";
 
 interface IEvents {
   id: number;
@@ -58,9 +59,7 @@ export default async function Page({
             <p className="text-gray-600 mb-3">
               {event.category}, {event.venue}
             </p>
-            <button className="bg-radial from-orange-300 to-orange-500 text-gray-800 px-4 py-2 rounded-md cursor-pointer hover:from-orange-300 hover:to-orange-600 text-shadow-md">
-              Add ticket
-            </button>
+            <AddTicketModal eventId ={event.id.toString()} />
           </div>
         </div>
         <hr className="w-full my-4 border-gray-300 flex justify-center"/>
