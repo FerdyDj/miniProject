@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import axios from "@/lib/axios";
 import Image from "next/image";
 import AddTicketModal from "./_components/ticket";
+import TicketsList from "./_components/ticketlist";
 
 interface IEvents {
   id: number;
@@ -59,13 +60,20 @@ export default async function Page({
             <p className="text-gray-600 mb-3">
               {event.category}, {event.venue}
             </p>
-            <AddTicketModal eventId ={event.id.toString()} />
+            <AddTicketModal eventId={event.id.toString()} />
           </div>
         </div>
-        <hr className="w-full my-4 border-gray-300 flex justify-center"/>
+        <hr className="w-full my-4 border-gray-300 flex justify-center" />
+        <TicketsList eventId={event.id.toString()} />
       </div>
       <div className="flex flex-col items-center w-[100%] md:w-[50%] h-[50%] md:h-screen mt-20">
-        <Image src={"/Ticket.png"} width={400} height={400} alt="ticket-pic" className="sticky top-20"/>
+        <Image
+          src={"/Ticket.png"}
+          width={400}
+          height={400}
+          alt="ticket-pic"
+          className="sticky top-20"
+        />
       </div>
     </div>
   );

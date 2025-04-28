@@ -27,14 +27,14 @@ export default function SidebarOrganizer() {
             <div className="text-2xl font-bold mb-8 text-center">Organizer Dashboard</div>
             <div className="flex flex-col space-y-6">
               <Link
-                href={`/organizer/${session.data.user.username}/events`}
+                href={`/dashboard/${session.data.user.username}`}
                 className="flex items-center gap-3 rounded-md p-3 transition duration-300 hover:bg-gray-300"
               >
                 <MdEventNote className="w-5 h-5" />
                 My Event
               </Link>
               <Link
-                href={`/organizer/${session.data.user.username}/chart`}
+                href={`/dashboard/${session.data.user.username}/chart`}
                 className="flex items-center gap-3 rounded-md p-3 transition duration-300 hover:bg-gray-300"
               >
                 <FaChartBar className="w-5 h-5" />

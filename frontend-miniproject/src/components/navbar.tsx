@@ -59,7 +59,7 @@ export default function Navbar() {
 
               <button
                 onClick={handleSearch}
-                className="bg-orange-500 text-white px-4 py-2 rounded-sm hover:bg-orange-400"
+                className="bg-orange-500 text-white px-4 py-2 rounded-sm cursor-pointer hover:bg-orange-400"
               >
                 Search
               </button>

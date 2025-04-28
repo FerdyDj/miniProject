@@ -4,6 +4,7 @@ import axios from "@/lib/axios";
 import { AxiosError } from "axios";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CgClose } from "react-icons/cg";
 import { toast } from "react-toastify";
@@ -11,8 +12,8 @@ import * as yup from "yup";
 
 const Schema = yup.object().shape({
   category: yup.string().required("Category is required"),
-  price: yup.number().positive().integer().required("Price is required"),
-  quantity: yup.number().positive().integer().required("Quantity is required"),
+  price: yup.number().positive("Please add price").integer().required("Price is required"),
+  quantity: yup.number().positive("Please add quantity").integer().required("Quantity is required"),
   discount: yup.number().notRequired(),
 });
 
@@ -31,6 +32,8 @@ export default function AddTicketModal({ eventId }: { eventId: string }) {
     quantity: 0,
   };
 
+  const router = useRouter();
+
   const onSubmit = async (
     value: ITicketForm,
     action: FormikHelpers<ITicketForm>
@@ -44,6 +47,7 @@ export default function AddTicketModal({ eventId }: { eventId: string }) {
       setIsOpen(false);
       action.resetForm();
       toast.success("Ticket Created ✅");
+      router.refresh();
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err.response?.data?.message);
@@ -65,7 +69,7 @@ export default function AddTicketModal({ eventId }: { eventId: string }) {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-transparent bg-opacity-40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-transparent bg-opacity-40 flex justify-center items-center z-50 text-shadow-md">
           <div className="bg-radial from-orange-200 to-orange-300 p-8 rounded-lg shadow-md max-w-md w-full">
             <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold mb-4">Add Ticket</h2>

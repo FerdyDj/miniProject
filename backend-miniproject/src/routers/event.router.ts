@@ -19,7 +19,6 @@ export class EventRouter {
     this.router.get("/", this.eventController.getEvent);
     this.router.get(
       "/:id",
-      this.authMiddleware.verifyTokenOrganizer,
       this.eventController.getEventById
     );
     this.router.post(

@@ -1,5 +1,6 @@
 import axios from "@/lib/axios";
 import Image from "next/image";
+import Link from "next/link";
 import Marquee from "react-fast-marquee";
 
 interface IEvents {
@@ -17,8 +18,12 @@ export default async function DataCarousel() {
   const currentDate = new Date();
 
   // Filter events that haven't passed the eventDate
-  const upcomingEvents = events.filter((e) => new Date(e.eventDate) >= currentDate);
-  const championship = upcomingEvents.filter((e) => e.category === "CHAMPIONSHIP");
+  const upcomingEvents = events.filter(
+    (e) => new Date(e.eventDate) >= currentDate
+  );
+  const championship = upcomingEvents.filter(
+    (e) => e.category === "CHAMPIONSHIP"
+  );
   const league = upcomingEvents.filter((e) => e.category === "LEAGUE");
   const friendly = upcomingEvents.filter((e) => e.category === "FRIENDLY");
 
@@ -37,30 +42,31 @@ export default async function DataCarousel() {
         <div className="p-4 flex justify-center gap-3">
           {upcomingEvents.length > 0 ? (
             upcomingEvents.map((event) => (
-              <div
-                key={event.id}
-                className="w-[300px] h-[250px] rounded-lg shadow-md p-4 text-white relative"
-              >
-                <h3 className="absolute font-semibold right-4 top-5.5 px-2 bg-orange-600 rounded-l-md">
-                  {event.category}
-                </h3>
-                <Image
-                  src={event.image}
-                  alt={event.title}
-                  width={300}
-                  height={200}
-                  className="object-cover w-full rounded-md mb-2"
-                />
-                <h3 className="text-lg font-semibold">{event.title}</h3>
-                <p className="text-sm text-gray-300">
-                  {new Date(event.eventDate).toLocaleDateString("en-US", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </p>
-              </div>
+              <Link href={`/event/${event.id}`} key={event.id}>
+                <div
+                  className="w-[300px] h-[250px] rounded-lg shadow-md p-4 text-white relative"
+                >
+                  <h3 className="absolute font-semibold right-4 top-5.5 px-2 bg-orange-600 rounded-l-md">
+                    {event.category}
+                  </h3>
+                  <Image
+                    src={event.image}
+                    alt={event.title}
+                    width={300}
+                    height={200}
+                    className="object-cover w-full rounded-md mb-2"
+                  />
+                  <h3 className="text-lg font-semibold">{event.title}</h3>
+                  <p className="text-sm text-gray-300">
+                    {new Date(event.eventDate).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+              </Link>
             ))
           ) : (
             <div className="p-0 md:p-8">There is no Match Available</div>
