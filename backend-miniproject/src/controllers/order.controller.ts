@@ -10,9 +10,7 @@ export class OrderController {
       const { tickets, usePoint, useVoucher } = req.body;
       const customerId = req.customer?.id;
 
-      const customer = await prisma.customer.findUnique({
-        where: { id: customerId },
-      });
+      const customer = await prisma.customer.findUnique({where: {id: customerId}});
 
       if (!tickets || !Array.isArray(tickets) || tickets.length === 0) {
         res.status(400).send({ message: "No tickets selected" });
@@ -51,6 +49,7 @@ export class OrderController {
             });
           })
         );
+
         if (usePoint) {
           const point = await tx.point.findFirst({ where: { customerId } });
           if (point) {
@@ -77,7 +76,7 @@ export class OrderController {
           description: `Invoice order with Id ${customerId}`,
           currency: "IDR",
           reminderTime: 1,
-          successRedirectUrl: `http://localhost:3000/profile/${customer?.username}/ticket`,
+          successRedirectUrl: `http://localhost:3000/profile/${customer?.username}/ticket`
         };
 
         const invoice = await xendit.Invoice.createInvoice({ data });
