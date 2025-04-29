@@ -7,39 +7,84 @@ import { StatusOrder } from "../../prisma/generated/client";
 export class OrderController {
   async createOrder(req: Request, res: Response) {
     try {
-      const { ticketId, qty, amount } = req.body;
+      const { tickets, usePoint, useVoucher } = req.body;
+      const customerId = req.customer?.id;
+
+      const customer = await prisma.customer.findUnique({
+        where: { id: customerId },
+      });
+
+      if (!tickets || !Array.isArray(tickets) || tickets.length === 0) {
+        res.status(400).send({ message: "No tickets selected" });
+        return;
+      }
 
       await prisma.$transaction(async (tx) => {
-        const order = await tx.order.create({
-          data: {
-            ticketId,
-            qty,
-            amount,
-            status: "PENDING",
-            expiredAt: new Date(Date.now() + 60 * 60 * 1000),
-            customerId: req.customer?.id!,
-          },
-        });
+        let totalAmount = 0;
 
-        await tx.ticket.update({
-          data: { quantity: { decrement: qty } },
-          where: { id: ticketId },
-        });
+        const order = await Promise.all(
+          tickets.map(async (item: { ticketId: string; quantity: number }) => {
+            const ticket = await tx.ticket.findUnique({
+              where: { id: item.ticketId },
+            });
+
+            if (!ticket) throw { message: "Ticket not found!" };
+            if (ticket.quantity < item.quantity)
+              throw { message: "Not enough ticket stock!" };
+
+            await tx.ticket.update({
+              where: { id: item.ticketId },
+              data: { quantity: { decrement: item.quantity } },
+            });
+
+            totalAmount += ticket.price * item.quantity;
+
+            return tx.order.create({
+              data: {
+                ticketId: item.ticketId,
+                qty: item.quantity,
+                amount: ticket.price * item.quantity,
+                status: "PENDING",
+                expiredAt: new Date(Date.now() + 60 * 60 * 1000),
+                customerId: req.customer?.id!,
+              },
+            });
+          })
+        );
+        if (usePoint) {
+          const point = await tx.point.findFirst({ where: { customerId } });
+          if (point) {
+            totalAmount = Math.max(0, totalAmount - point.amount);
+            await tx.point.delete({ where: { id: point.id } }); // use all point once
+          }
+        } else if (useVoucher) {
+          const discount = await tx.discount.findFirst({
+            where: { customerId, used: false },
+          });
+          if (discount) {
+            totalAmount = totalAmount - (totalAmount * discount.percen) / 100;
+            await tx.discount.update({
+              where: { id: discount.id },
+              data: { used: true },
+            });
+          }
+        }
 
         const data: CreateInvoiceRequest = {
-          amount,
+          amount: Math.floor(totalAmount),
           invoiceDuration: "3600",
-          externalId: order.id,
-          description: `Invoice order with Id ${order.id}`,
+          externalId: order[0].id,
+          description: `Invoice order with Id ${customerId}`,
           currency: "IDR",
           reminderTime: 1,
+          successRedirectUrl: `http://localhost:3000/profile/${customer?.username}/ticket`,
         };
 
         const invoice = await xendit.Invoice.createInvoice({ data });
 
-        await tx.order.update({
+        await tx.order.updateMany({
+          where: { customerId, status: "PENDING" },
           data: { invoiceUrl: invoice.invoiceUrl },
-          where: { id: order.id },
         });
 
         res.status(201).send({ message: "Order Created ✅", invoice });
@@ -77,7 +122,7 @@ export class OrderController {
         });
       }
 
-      res.status(201).send({ message: "Success ✅" });
+      res.status(200).send({ message: "Success ✅" });
     } catch (err) {
       console.log(err);
       res.status(400).send(err);

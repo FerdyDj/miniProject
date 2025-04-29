@@ -4,6 +4,7 @@ import { useState, useEffect, use } from "react";
 import axios from "@/lib/axios";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface IEvent {
   id: string;
@@ -58,8 +59,9 @@ export default function EventDetailPage({
   const [usePoint, setUsePoint] = useState<boolean>(false);
   const [useVoucher, setUseVoucher] = useState<boolean>(false);
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const { id } = use(params);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -132,7 +134,7 @@ export default function EventDetailPage({
   let totalPrice = totalTickets;
 
   if (usePoint && points) {
-    totalPrice = totalPrice - points.amount;
+    totalPrice = Math.max(0, totalPrice - points.amount);
   } else if (useVoucher && discount) {
     totalPrice = totalPrice - (totalPrice * discount.percen) / 100;
   }
@@ -148,8 +150,13 @@ export default function EventDetailPage({
         usePoint,
         useVoucher,
       };
-      const response = await axios.post(`/orders/status`, payload);
-      window.location.href = response.data.invoice.invoiceUrl;
+      const response = await axios.post(`/orders`, payload, {
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`
+        }
+      });
+      console.log(response.data)
+      router.push(response.data.invoice.invoiceUrl);
     } catch (error) {
       console.error(error);
       alert("Order failed ❌");
@@ -264,7 +271,7 @@ export default function EventDetailPage({
       </div>
 
       {/* Right Sidebar */}
-      <div className="bg-gray-800 rounded-2xl mt-12 p-6 space-y-6 shadow-lg h-fit sticky top-20">
+      <div className="bg-gray-800 rounded-2xl mt-12 p-6 space-y-6 shadow-lg h-fit">
         {/* Event Info */}
         <div className="space-y-2">
           <p className="text-sm font-medium text-orange-400">

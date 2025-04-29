@@ -20,7 +20,10 @@ export class OrderRouter {
       this.authMiddleware.verifyToken,
       this.orderController.createOrder
     );
-    this.router.post("/status", this.orderController.updateStatus);
+    this.router.post(
+      "/status",
+      this.orderController.updateStatus
+    );
   }
 
   getRouter(): Router {
