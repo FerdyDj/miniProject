@@ -73,7 +73,7 @@ export default function Page() {
       action.resetForm();
       setSelectedImage(null);
       toast.success(data.message);
-      router.push("/dashboard");
+      router.push(`/dashboard/${user.data?.user.username}`);
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err.response?.data?.message);
@@ -93,7 +93,7 @@ export default function Page() {
   };
 
   return (
-    <div className="flex justify-center h-screen w-screen mt-16">
+    <div className="flex justify-center min-h-screen w-screen mt-16">
       <div className="flex flex-col items-center justify-center w-[90%] md:w-[850px] rounded-sm pb-8 h-full">
         <Formik
           initialValues={initialValues}

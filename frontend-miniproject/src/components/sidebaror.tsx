@@ -20,7 +20,7 @@ export default function SidebarOrganizer() {
       {session.data?.user.role === "ORGANIZER" && (
         <>
           <nav
-            className={`fixed top-0 left-0 h-screen w-64 bg-gradient-to-br from-orange-200 via-orange-300 to-orange-400 text-gray-800 p-6 transform transition-transform duration-300 ease-in-out z-40 pt-20 text-shadow-md font-semibold
+            className={`fixed top-0 left-0 min-h-screen w-64 bg-gradient-to-br from-orange-200 via-orange-300 to-orange-400 text-gray-800 p-6 transform transition-transform duration-300 ease-in-out z-40 pt-20 text-shadow-md font-semibold
         ${isOpen ? "translate-x-0" : "-translate-x-full"} 
         md:translate-x-0 md:static md:w-64`}
           >

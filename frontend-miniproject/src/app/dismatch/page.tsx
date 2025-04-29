@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation"; // untuk ambil query param
 import axios from "@/lib/axios";
 import Image from "next/image";
+import Link from "next/link";
 
 interface IEvents {
   id: number;
@@ -24,6 +25,11 @@ interface IEvents {
 export default function Page() {
   const [events, setEvents] = useState<IEvents[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  // Pagination States
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 3; // Events per page
+
 
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search")?.toLowerCase() || "";
@@ -58,9 +64,35 @@ export default function Page() {
       const matchesLocation = selectedLocation
       ? event.location?.toLowerCase() === selectedLocation
       : true;
+
+      const upComing = new Date(event.eventDate) > new Date();
     
-    return matchesTitle && matchesCategory && matchesLocation;
+    return matchesTitle && matchesCategory && matchesLocation && upComing;
   });
+
+   // 🔢 Sort Events by Nearest Expiration Date
+   const sortedEvents = filteredEvents.sort(
+    (a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime()
+  );
+
+  // Pagination
+  const totalPages = Math.ceil(sortedEvents.length / itemsPerPage); // Calculate total pages
+  const paginatedEvents = filteredEvents.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
 
   return (
     <div className="p-5 md:p-10">
@@ -68,8 +100,9 @@ export default function Page() {
         All Events
       </h2>
       <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-        {filteredEvents.length > 0 ? (
-          filteredEvents.map((event) => (
+        {paginatedEvents.length > 0 ? (
+          paginatedEvents.map((event) => (
+            <Link href={`/event/${event.id}`} key={event.id}>
             <div
               key={event.id}
               className="w-auto h-auto rounded-lg shadow-md text-white border border-orange-400 relative"
@@ -113,11 +146,39 @@ export default function Page() {
                 {event.organizer?.fullname || "Organizer Name"}
               </div>
             </div>
+            </Link>
           ))
         ) : (
           <div className="p-0 md:p-8 text-white">No events found</div>
         )}
       </div>
+      {/* Pagination Controls */}
+      <div className="flex justify-center items-center mt-6 space-x-4 text-shadow-md font-semibold">
+        <button
+          disabled={currentPage === 1}
+          onClick={handlePreviousPage}
+          className={`py-2 px-4 rounded ${
+            currentPage === 1
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-orange-500 hover:bg-orange-600 cursor-pointer"
+          }`}
+        >
+          Previous
+        </button>
+        <span className="text-white">{`Page ${currentPage} of ${totalPages}`}</span>
+        <button
+          disabled={currentPage === totalPages}
+          onClick={handleNextPage}
+          className={`py-2 px-4 rounded ${
+            currentPage === totalPages
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-orange-500 hover:bg-orange-600 cursor-pointer"
+          }`}
+        >
+          Next
+        </button>
+      </div>
+
     </div>
   );
 }

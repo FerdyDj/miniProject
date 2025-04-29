@@ -5,36 +5,9 @@ import axios from "@/lib/axios";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
-interface IEvent {
-  id: string;
-  title: string;
-  image: string;
-  eventDate: string;
-  category: string;
-  description: string;
-  location: string;
-  startTime: string;
-  endTime: string;
-  venue: string;
-}
-
-interface ITicket {
-  id: string;
-  category: string;
-  price: number;
-  quantity: string;
-}
-
-interface IPoint {
-  amount: number;
-}
-
-interface IDiscount {
-  id: number;
-  code: string;
-  percen: number;
-}
+import { IDiscount, IEvent, IPoint, ITicket } from "@/types/order";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 export default function EventDetailPage({
   params,
@@ -58,7 +31,6 @@ export default function EventDetailPage({
   const [discount, setDiscount] = useState<IDiscount | null>(null);
   const [usePoint, setUsePoint] = useState<boolean>(false);
   const [useVoucher, setUseVoucher] = useState<boolean>(false);
-
   const { data: session } = useSession();
   const { id } = use(params);
   const router = useRouter();
@@ -74,7 +46,6 @@ export default function EventDetailPage({
         console.error(err);
       }
     };
-
     fetchEvent();
   }, []);
 
@@ -132,7 +103,6 @@ export default function EventDetailPage({
   );
 
   let totalPrice = totalTickets;
-
   if (usePoint && points) {
     totalPrice = Math.max(0, totalPrice - points.amount);
   } else if (useVoucher && discount) {
@@ -152,14 +122,15 @@ export default function EventDetailPage({
       };
       const response = await axios.post(`/orders`, payload, {
         headers: {
-          Authorization: `Bearer ${session?.accessToken}`
-        }
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
       });
-      console.log(response.data)
+      toast.success(response.data.message)
       router.push(response.data.invoice.invoiceUrl);
-    } catch (error) {
-      console.error(error);
-      alert("Order failed ❌");
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data.message);
+      }
     }
   };
 
@@ -180,7 +151,6 @@ export default function EventDetailPage({
             className="object-cover w-full h-auto"
           />
         </div>
-
         {/* Tabs */}
         <div className="border-b border-gray-700">
           <nav className="flex space-x-8">
@@ -206,7 +176,6 @@ export default function EventDetailPage({
             </button>
           </nav>
         </div>
-
         {/* Content based on active tab */}
         <div className="space-y-6 text-gray-300">
           {activeTab === "description" && (
@@ -236,40 +205,46 @@ export default function EventDetailPage({
               </div>
             </>
           )}
-
-          {activeTab === "ticket" && session?.user.role === "CUSTOMER" ? (
-            <div className="mt-2 text-gray-800 text-shadow-md">
-              <h2 className="text-xl font-semibold mb-4 text-white">Tickets</h2>
-              {ticket?.length === 0 ? (
-                <p className="text-white">
-                  No tickets available for this event yet.
+          {activeTab === "ticket" && (
+            <>
+              {session?.user?.role !== "CUSTOMER" ? (
+                <p className="text-white font-semibold text-lg">
+                  To buy ticket please login first as a customer
                 </p>
               ) : (
-                <div className="flex flex-col w-full">
-                  {ticket?.map((ticket) => (
-                    <div
-                      key={ticket.id}
-                      onClick={() => handleSelectTicket(ticket)}
-                      className="border bg-gradient-to-br from-orange-200 via-orange-300 to-orange-400 rounded-md p-4 shadow-sm hover:shadow-md transition mb-4 cursor-pointer"
-                    >
-                      <h3 className="font-bold text-lg">{ticket?.category}</h3>
-                      <p className="">
-                        Price: IDR {ticket?.price.toLocaleString()}
-                      </p>
-                      <p className="">Stock: {ticket?.quantity}</p>
+                <div className="mt-2 text-gray-800 text-shadow-md">
+                  <h2 className="text-xl font-semibold mb-4 text-white">
+                    Tickets
+                  </h2>
+                  {ticket?.length === 0 ? (
+                    <p className="text-white">
+                      No tickets available for this event yet.
+                    </p>
+                  ) : (
+                    <div className="flex flex-col w-full">
+                      {ticket?.map((ticket) => (
+                        <div
+                          key={ticket.id}
+                          onClick={() => handleSelectTicket(ticket)}
+                          className="border bg-gradient-to-br from-orange-200 via-orange-300 to-orange-400 rounded-md p-4 shadow-sm hover:shadow-md transition mb-4 cursor-pointer"
+                        >
+                          <h3 className="font-bold text-lg">
+                            {ticket?.category}
+                          </h3>
+                          <p className="">
+                            Price: IDR {ticket?.price.toLocaleString()}
+                          </p>
+                          <p className="">Stock: {ticket?.quantity}</p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
               )}
-            </div>
-          ) : (
-            <p className="text-white font-semibold text-lg">
-              To buy ticket please login first as a customer
-            </p>
+            </>
           )}
         </div>
       </div>
-
       {/* Right Sidebar */}
       <div className="bg-gray-800 rounded-2xl mt-12 p-6 space-y-6 shadow-lg h-fit">
         {/* Event Info */}
@@ -353,7 +328,6 @@ export default function EventDetailPage({
                 )}
               </div>
             </div>
-
             {/* Discounts */}
             {points || discount ? (
               <div className="mt-6 space-y-4">
@@ -391,7 +365,6 @@ export default function EventDetailPage({
                 )}
               </div>
             ) : null}
-
             {/* Total Section */}
             <div className="border-t border-orange-300 pt-4">
               <div className="flex justify-between text-white font-bold">
@@ -401,7 +374,7 @@ export default function EventDetailPage({
               <button
                 onClick={handleOrder}
                 disabled={selectedTickets.length === 0}
-                className={`mt-4 w-full transition py-3 rounded-lg font-bold text-center ${
+                className={`mt-4 w-full transition py-3 rounded-lg font-bold text-center cursor-pointer ${
                   selectedTickets.length > 0
                     ? "bg-gradient-to-br from-orange-300 bg-orange-400 hover:bg-orange-700 text-gray-800"
                     : "bg-gray-600 text-gray-300 cursor-not-allowed"
