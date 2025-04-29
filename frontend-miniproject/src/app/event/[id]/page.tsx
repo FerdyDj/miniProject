@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react";
 import axios from "@/lib/axios";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 interface IEvent {
   id: string;
@@ -14,6 +15,7 @@ interface IEvent {
   location: string;
   startTime: string;
   endTime: string;
+  venue: string;
 }
 
 interface ITicket {
@@ -23,17 +25,40 @@ interface ITicket {
   quantity: string;
 }
 
+interface IPoint {
+  amount: number;
+}
+
+interface IDiscount {
+  id: number;
+  code: string;
+  percen: number;
+}
+
 export default function EventDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const [event, setEvent] = useState<IEvent | null>(null);
-  const [ticket, setTicket] = useState<ITicket[] | null>(null);
+  const [ticket, setTicket] = useState<ITicket[]>([]);
   const [activeTab, setActiveTab] = useState<"description" | "ticket">(
     "description"
   );
+  const [selectedTickets, setSelectedTickets] = useState<
+    {
+      id: string;
+      category: string;
+      price: number;
+      quantity: number;
+    }[]
+  >([]);
+  const [points, setPoints] = useState<IPoint | null>(null);
+  const [discount, setDiscount] = useState<IDiscount | null>(null);
+  const [usePoint, setUsePoint] = useState<boolean>(false);
+  const [useVoucher, setUseVoucher] = useState<boolean>(false);
 
+  const { data: session, status } = useSession();
   const { id } = use(params);
 
   useEffect(() => {
@@ -49,7 +74,87 @@ export default function EventDetailPage({
     };
 
     fetchEvent();
-  }, [id]);
+  }, []);
+
+  useEffect(() => {
+    const fetchReward = async () => {
+      if (session?.user.role === "CUSTOMER") {
+        const pointRes = await axios.get(`/points/${session?.user.id}`, {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        });
+        setPoints(pointRes.data.stat._sum || null);
+        const discountRes = await axios.get(`/discounts/${session?.user.id}`, {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        });
+        setDiscount(discountRes.data.discount || null);
+      }
+    };
+    fetchReward();
+  }, [id, session]);
+
+  const handleSelectTicket = (ticket: ITicket) => {
+    setSelectedTickets((prevSelected) => {
+      const exist = prevSelected.find((t) => t.id === ticket.id);
+      if (exist) {
+        // if ticket already selected, increase quantity
+        return prevSelected.map((t) =>
+          t.id === ticket.id ? { ...t, quantity: t.quantity + 1 } : t
+        );
+      } else {
+        // if ticket not selected, add it
+        return [...prevSelected, { ...ticket, quantity: 1 }];
+      }
+    });
+  };
+
+  const handleChangeQuantity = (ticketId: string, delta: number) => {
+    setSelectedTickets(
+      (prev) =>
+        prev
+          .map((ticket) =>
+            ticket.id === ticketId
+              ? { ...ticket, quantity: ticket.quantity + delta }
+              : ticket
+          )
+          .filter((ticket) => ticket.quantity > 0) // remove if quantity goes to 0
+    );
+  };
+
+  const totalTickets = selectedTickets.reduce(
+    (sum, ticket) => sum + ticket.quantity * ticket.price,
+    0
+  );
+
+  let totalPrice = totalTickets;
+
+  if (usePoint && points) {
+    totalPrice = totalPrice - points.amount;
+  } else if (useVoucher && discount) {
+    totalPrice = totalPrice - (totalPrice * discount.percen) / 100;
+  }
+
+  const handleOrder = async () => {
+    if (selectedTickets.length === 0) return;
+    try {
+      const payload = {
+        tickets: selectedTickets.map((ticket) => ({
+          ticketId: ticket.id,
+          quantity: ticket.quantity,
+        })),
+        usePoint,
+        useVoucher,
+      };
+      const response = await axios.post(`/orders/status`, payload);
+      window.location.href = response.data.invoice.invoiceUrl;
+    } catch (error) {
+      console.error(error);
+      alert("Order failed ❌");
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -125,7 +230,7 @@ export default function EventDetailPage({
             </>
           )}
 
-          {activeTab === "ticket" && (
+          {activeTab === "ticket" && session?.user.role === "CUSTOMER" ? (
             <div className="mt-2 text-gray-800 text-shadow-md">
               <h2 className="text-xl font-semibold mb-4 text-white">Tickets</h2>
               {ticket?.length === 0 ? (
@@ -137,7 +242,8 @@ export default function EventDetailPage({
                   {ticket?.map((ticket) => (
                     <div
                       key={ticket.id}
-                      className="border bg-gradient-to-br from-orange-200 via-orange-300 to-orange-400 rounded-md p-4 shadow-sm hover:shadow-md transition"
+                      onClick={() => handleSelectTicket(ticket)}
+                      className="border bg-gradient-to-br from-orange-200 via-orange-300 to-orange-400 rounded-md p-4 shadow-sm hover:shadow-md transition mb-4 cursor-pointer"
                     >
                       <h3 className="font-bold text-lg">{ticket?.category}</h3>
                       <p className="">
@@ -149,12 +255,16 @@ export default function EventDetailPage({
                 </div>
               )}
             </div>
+          ) : (
+            <p className="text-white font-semibold text-lg">
+              To buy ticket please login first as a customer
+            </p>
           )}
         </div>
       </div>
 
       {/* Right Sidebar */}
-      <div className="bg-gray-900 rounded-2xl mt-12 p-6 space-y-6 shadow-lg h-fit">
+      <div className="bg-gray-800 rounded-2xl mt-12 p-6 space-y-6 shadow-lg h-fit sticky top-20">
         {/* Event Info */}
         <div className="space-y-2">
           <p className="text-sm font-medium text-orange-400">
@@ -162,9 +272,8 @@ export default function EventDetailPage({
           </p>
           <h1 className="text-2xl font-bold text-white">{event?.title}</h1>
         </div>
-
         {/* Event Details */}
-        <div className="text-sm text-gray-400 space-y-2">
+        <div className="text-sm text-gray-300 space-y-2">
           <p>
             <span className="font-semibold text-white">Date:</span>{" "}
             {event?.eventDate
@@ -182,35 +291,123 @@ export default function EventDetailPage({
           </p>
           <p>
             <span className="font-semibold text-white">Location:</span>{" "}
-            {event?.location}
+            {event?.venue}, {event?.location}
           </p>
         </div>
-
-        {/* Ticket Section */}
-        <div className="border-t border-gray-700 pt-4 space-y-4">
-          <div className="flex justify-between items-center text-white font-bold">
-            {/* <span>Total {totalTickets} ticket(s)</span> */}
-            {/* <span>IDR {totalPrice.toLocaleString("id-ID")}</span> */}
-          </div>
-          <button
-          // disabled={totalTickets === 0}
-          // className={`w-full transition py-3 rounded-lg font-bold text-center ${
-          //   totalTickets > 0 ? "bg-orange-500 hover:bg-orange-600 text-white" : "bg-gray-600 text-gray-300 cursor-not-allowed"
-          // }`}
-          >
-            {/* {totalTickets > 0 ? "Order Ticket" : "Select Ticket First"} */}
-          </button>
-        </div>
-
         {/* Share Section */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-700">
-          <span className="text-sm text-gray-400">Share Match</span>
+          <span className="text-sm text-gray-300">Share Match</span>
           <div className="flex items-center space-x-4 text-white">
             <button className="hover:scale-110 transition">🔗</button>
             <button className="hover:scale-110 transition">📩</button>
             <button className="hover:scale-110 transition">🟢</button>
           </div>
         </div>
+        {/* Ticket Section */}
+        {session?.user.role === "CUSTOMER" && (
+          <>
+            <div className="border-t border-gray-700 pt-4 space-y-4">
+              <div className="flex justify-between items-center text-white font-bold">
+                {selectedTickets.length > 0 ? (
+                  <div className="space-y-4">
+                    {selectedTickets.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex justify-between items-center text-white gap-3"
+                      >
+                        <div>
+                          <h4 className="font-semibold">{item.category}</h4>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <button
+                              onClick={() => handleChangeQuantity(item.id, -1)}
+                              className="px-2 py-1 bg-gray-700 rounded hover:bg-gray-600"
+                            >
+                              -
+                            </button>
+                            <span>{item.quantity}</span>
+                            <button
+                              onClick={() => handleChangeQuantity(item.id, 1)}
+                              className="px-2 py-1 bg-gray-700 rounded hover:bg-gray-600"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                        <p className="pt-7">
+                          IDR {(item.price * item.quantity).toLocaleString()}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-400 text-sm">
+                    Select tickets to order
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Discounts */}
+            {points || discount ? (
+              <div className="mt-6 space-y-4">
+                {points && (
+                  <div className="flex items-center justify-between">
+                    <label className="text-gray-300">
+                      Use Points (IDR {points.amount})
+                    </label>
+                    <input
+                      type="checkbox"
+                      checked={usePoint}
+                      disabled={useVoucher}
+                      onChange={(e) => {
+                        setUsePoint(e.target.checked);
+                        if (e.target.checked) setUseVoucher(false);
+                      }}
+                    />
+                  </div>
+                )}
+                {discount && (
+                  <div className="flex items-center justify-between">
+                    <label className="text-gray-300">
+                      Use Voucher ({discount.percen}%)
+                    </label>
+                    <input
+                      type="checkbox"
+                      checked={useVoucher}
+                      disabled={usePoint}
+                      onChange={(e) => {
+                        setUseVoucher(e.target.checked);
+                        if (e.target.checked) setUsePoint(false);
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            ) : null}
+
+            {/* Total Section */}
+            <div className="border-t border-orange-300 pt-4">
+              <div className="flex justify-between text-white font-bold">
+                <span>Total:</span>
+                <span>IDR {Math.floor(totalPrice).toLocaleString()}</span>
+              </div>
+              <button
+                onClick={handleOrder}
+                disabled={selectedTickets.length === 0}
+                className={`mt-4 w-full transition py-3 rounded-lg font-bold text-center ${
+                  selectedTickets.length > 0
+                    ? "bg-gradient-to-br from-orange-300 bg-orange-400 hover:bg-orange-700 text-gray-800"
+                    : "bg-gray-600 text-gray-300 cursor-not-allowed"
+                }`}
+              >
+                {selectedTickets.length > 0
+                  ? `Order now`
+                  : "Select Ticket First"}
+              </button>
+            </div>
+          </>
+        )}
+        ;
       </div>
     </div>
   );

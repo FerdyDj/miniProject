@@ -8,6 +8,8 @@ import path from "path";
 import { OrganizerRouter } from "./routers/organizer.router";
 import { OrderRouter } from "./routers/order.router";
 import { TicketRouter } from "./routers/ticket.router";
+import { PointRouter } from "./routers/point.router";
+import { DiscountRouter } from "./routers/discount.router";
 
 const PORT: number = 8000;
 
@@ -44,6 +46,12 @@ app.use("/api/orders", orderRouter.getRouter());
 
 const ticketRouter = new TicketRouter();
 app.use("/api/tickets", ticketRouter.getRouter());
+
+const pointRouter = new PointRouter();
+app.use("/api/points", pointRouter.getRouter());
+
+const discountRouter = new DiscountRouter();
+app.use("/api/discounts", discountRouter.getRouter());
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
