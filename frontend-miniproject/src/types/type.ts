@@ -16,6 +16,7 @@ export interface ITicket {
   category: string;
   price: number;
   quantity: string;
+  eventId: string;
 }
 
 export interface IPoint {
@@ -26,4 +27,13 @@ export interface IDiscount {
   id: number;
   code: string;
   percen: number;
+}
+
+export interface ICustomer {
+  id: number;
+}
+
+export interface IOrder {
+  id: string;
+  ticketId: string;
 }

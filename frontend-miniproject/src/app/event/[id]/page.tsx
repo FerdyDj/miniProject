@@ -5,9 +5,10 @@ import axios from "@/lib/axios";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { IDiscount, IEvent, IPoint, ITicket } from "@/types/order";
+import { IDiscount, IEvent, IPoint, ITicket } from "@/types/type";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import Ticket from "./_components/ticket";
 
 export default function EventDetailPage({
   params,
@@ -84,6 +85,13 @@ export default function EventDetailPage({
     });
   };
 
+  const isDisabled = (ticket: ITicket) => {
+    return (
+      selectedTickets.length > 0 &&
+      selectedTickets[0].category !== ticket.category
+    );
+  };
+
   const handleChangeQuantity = (ticketId: string, delta: number) => {
     setSelectedTickets(
       (prev) =>
@@ -125,7 +133,7 @@ export default function EventDetailPage({
           Authorization: `Bearer ${session?.accessToken}`,
         },
       });
-      toast.success(response.data.message)
+      toast.success(response.data.message);
       router.push(response.data.invoice.invoiceUrl);
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -221,23 +229,11 @@ export default function EventDetailPage({
                       No tickets available for this event yet.
                     </p>
                   ) : (
-                    <div className="flex flex-col w-full">
-                      {ticket?.map((ticket) => (
-                        <div
-                          key={ticket.id}
-                          onClick={() => handleSelectTicket(ticket)}
-                          className="border bg-gradient-to-br from-orange-200 via-orange-300 to-orange-400 rounded-md p-4 shadow-sm hover:shadow-md transition mb-4 cursor-pointer"
-                        >
-                          <h3 className="font-bold text-lg">
-                            {ticket?.category}
-                          </h3>
-                          <p className="">
-                            Price: IDR {ticket?.price.toLocaleString()}
-                          </p>
-                          <p className="">Stock: {ticket?.quantity}</p>
-                        </div>
-                      ))}
-                    </div>
+                    <Ticket
+                      ticket={ticket}
+                      isDisabled={isDisabled}
+                      handleSelectTicket={handleSelectTicket}
+                    />
                   )}
                 </div>
               )}

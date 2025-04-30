@@ -15,10 +15,7 @@ export class TicketRouter {
   }
 
   private InitialiazeRoute() {
-    this.router.get(
-      "/:eventId",
-      this.ticketController.getTicketByEventId
-    );
+    this.router.get("/:eventId", this.ticketController.getTicketByEventId);
     this.router.get(
       "/:eventId",
       this.authMiddleware.verifyTokenOrganizer,

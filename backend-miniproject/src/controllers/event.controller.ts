@@ -92,4 +92,19 @@ export class EventController {
       res.status(400).send(err);
     }
   }
+
+  async getEventByOrganizerId(req: Request, res: Response){
+    try {
+      const { id: organizerId, role } = req.organizer!;
+
+      if(!organizerId || role !== "ORGANIZER") throw { message: "Unauthorized!"}
+
+      const events = await prisma.event.findMany({ where: {organizerId}})
+
+      res.status(200).send({ data: events })
+    } catch (err) {
+      console.log(err)
+      res.status(400).send(err);
+    }
+  }
 }

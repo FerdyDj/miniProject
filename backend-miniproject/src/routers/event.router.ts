@@ -17,9 +17,11 @@ export class EventRouter {
 
   private InitialiazeRoute() {
     this.router.get("/", this.eventController.getEvent);
+    this.router.get("/:id", this.eventController.getEventById);
     this.router.get(
-      "/:id",
-      this.eventController.getEventById
+      "/organizer/:organizerId",
+      this.authMiddleware.verifyTokenOrganizer,
+      this.eventController.getEventByOrganizerId
     );
     this.router.post(
       "/cloud",

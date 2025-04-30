@@ -66,7 +66,9 @@ export class TicketController {
 
       if (!event) throw { message: "Event not found!" };
 
-      const tickets = await prisma.ticket.findMany({ where: {eventId: event.id}})
+      const tickets = await prisma.ticket.findMany({
+        where: { eventId: event.id },
+      });
       res.status(200).send({
         message: "Event detail",
         tickets,

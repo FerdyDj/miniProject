@@ -10,7 +10,9 @@ export class OrderController {
       const { tickets, usePoint, useVoucher } = req.body;
       const customerId = req.customer?.id;
 
-      const customer = await prisma.customer.findUnique({where: {id: customerId}});
+      const customer = await prisma.customer.findUnique({
+        where: { id: customerId },
+      });
 
       if (!tickets || !Array.isArray(tickets) || tickets.length === 0) {
         res.status(400).send({ message: "No tickets selected" });
@@ -76,7 +78,7 @@ export class OrderController {
           description: `Invoice order with Id ${customerId}`,
           currency: "IDR",
           reminderTime: 1,
-          successRedirectUrl: `http://localhost:3000/profile/${customer?.username}/ticket`
+          successRedirectUrl: `http://localhost:3000/profile/${customer?.username}/ticket`,
         };
 
         const invoice = await xendit.Invoice.createInvoice({ data });
@@ -122,6 +124,55 @@ export class OrderController {
       }
 
       res.status(200).send({ message: "Success ✅" });
+    } catch (err) {
+      console.log(err);
+      res.status(400).send(err);
+    }
+  }
+
+  async getOrderByCustomerId(req: Request, res: Response) {
+    try {
+      const { id: customerId, role } = req.customer!;
+
+      if (!customerId || role !== "CUSTOMER")
+        throw { message: "Unauthorized!" };
+
+      const orders = await prisma.order.findMany({
+        where: { customerId: Number(customerId), status: "PAID" }, // Ensure customerId is converted to a number
+        include: {
+          ticket: {
+            include: {
+              event: true, // Include related event details
+            },
+          },
+        },
+        orderBy: { ticket: { event : { eventDate: "asc"}}}
+      });
+  
+      // Transform the result to simplify the response format
+      // const customerTickets = orders.map((order) => ({
+      //   orderId: order.id,
+      //   ticketId: order.ticket.id,
+      //   ticketCategory: order.ticket.category,
+      //   ticketPrice: order.ticket.price,
+      //   quantity: order.qty,
+      //   event: {
+      //     eventId: order.ticket.event.id,
+      //     title: order.ticket.event.title,
+      //     eventDate: order.ticket.event.eventDate,
+      //     location: order.ticket.event.location, 
+      //     venue: order.ticket.event.venue, 
+      //     startTime: order.ticket.event.startTime,
+      //     endTime: order.ticket.event.endTime,
+      //   },
+      // }));
+  
+
+      res.status(200).send({
+        message: "Ticket detail",
+        orders,
+        // customerTickets,
+      });
     } catch (err) {
       console.log(err);
       res.status(400).send(err);

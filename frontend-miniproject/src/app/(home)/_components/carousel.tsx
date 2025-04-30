@@ -79,6 +79,7 @@ export default async function DataCarousel() {
       <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-white">
         {championship.length > 0 ? (
           championship.map((event) => (
+            <Link href={`/event/${event.id}`} key={event.id}>
             <div
               key={event.id}
               className="w-auto h-auto rounded-lg shadow-md p-4 relative"
@@ -103,6 +104,7 @@ export default async function DataCarousel() {
                 })}
               </p>
             </div>
+            </Link>
           ))
         ) : (
           <div className="p-0 md:p-4">There is no Championship Match</div>
@@ -112,6 +114,7 @@ export default async function DataCarousel() {
       <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-white">
         {league.length > 0 ? (
           league.map((event) => (
+            <Link href={`/event/${event.id}`} key={event.id}>
             <div
               key={event.id}
               className="w-auto h-auto rounded-lg shadow-md p-4 relative"
@@ -136,6 +139,7 @@ export default async function DataCarousel() {
                 })}
               </p>
             </div>
+            </Link>
           ))
         ) : (
           <div className="p-0 md:p-4">There is no League Match</div>
@@ -147,6 +151,7 @@ export default async function DataCarousel() {
       <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-white">
         {friendly.length > 0 ? (
           friendly.map((event) => (
+            <Link href={`/event/${event.id}`} key={event.id}>
             <div
               key={event.id}
               className="w-auto h-auto rounded-lg shadow-md p-4 relative"
@@ -171,6 +176,7 @@ export default async function DataCarousel() {
                 })}
               </p>
             </div>
+            </Link>
           ))
         ) : (
           <div className="p-0 md:p-4">There is no Friendly Match</div>
