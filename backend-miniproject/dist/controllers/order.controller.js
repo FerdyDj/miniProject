@@ -83,7 +83,7 @@ class OrderController {
                         description: `Invoice order with Id ${customerId}`,
                         currency: "IDR",
                         reminderTime: 1,
-                        successRedirectUrl: `http://localhost:3000/profile/${customer === null || customer === void 0 ? void 0 : customer.username}/ticket`,
+                        successRedirectUrl: `https://hooppass.vercel.app/profile/${customer === null || customer === void 0 ? void 0 : customer.username}/ticket`,
                     };
                     const invoice = yield xendit_1.default.Invoice.createInvoice({ data });
                     yield tx.order.updateMany({

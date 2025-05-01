@@ -78,7 +78,7 @@ export class OrderController {
           description: `Invoice order with Id ${customerId}`,
           currency: "IDR",
           reminderTime: 1,
-          successRedirectUrl: `http://localhost:3000/profile/${customer?.username}/ticket`,
+          successRedirectUrl: `https://hooppass.vercel.app/api/profile/${customer?.username}/ticket`,
         };
 
         const invoice = await xendit.Invoice.createInvoice({ data });
