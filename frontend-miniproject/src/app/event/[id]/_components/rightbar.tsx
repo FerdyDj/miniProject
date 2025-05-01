@@ -41,22 +41,22 @@ export default function RightBar({ event }: { event: IEvent | null }) {
           <span className="text-sm text-gray-300">Share Match</span>
           <div className="flex items-center space-x-4 text-white">
             <Link
-              href={`https://www.facebook.com/sharer/sharer.php?u=http://localhost:3000/event/${event?.id}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=https://hooppass.vercel.app/event/${event?.id}`}
             >
               <FaFacebook className="w-8 h-8 text-blue-500 hover:text-blue-400 hover:cursor-pointer" />
             </Link>
             <Link
-              href={`https://www.twitter.com/intent/tweet?url=http://localhost:3000/event/${event?.id}`}
+              href={`https://www.twitter.com/intent/tweet?url=https://hooppass.vercel.app//event/${event?.id}`}
             >
               <FaXTwitter className="w-8 h-8 text-black hover:text-gray-700 hover:cursor-pointer" />
             </Link>
             <Link
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=http://localhost:3000/event/${event?.id}`}
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=https://hooppass.vercel.app/event/${event?.id}`}
             >
               <FaLinkedin className="w-8 h-8 text-blue-500 hover:text-blue-400 hover:cursor-pointer" />
             </Link>
             <Link
-              href={`https://wa.me/?text=http://localhost:3000/event/${event?.id}`}
+              href={`https://wa.me/?text=https://hooppass.vercel.app/event/${event?.id}`}
             >
               <FaWhatsapp className="w-8 h-8 text-green-500 hover:text-green-400 hover:cursor-pointer" />
             </Link>
