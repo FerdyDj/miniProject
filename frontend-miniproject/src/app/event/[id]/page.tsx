@@ -51,7 +51,7 @@ export default function EventDetailPage({
       }
     };
     fetchEvent();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const fetchReward = async () => {

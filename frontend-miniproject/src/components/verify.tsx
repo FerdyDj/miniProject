@@ -2,13 +2,13 @@
 
 import axios from "@/lib/axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function VerifyPage({ token }: { token: string }) {
   const [msg, setMsg] = useState<string>("");
   const router = useRouter();
 
-  const onVerify = async () => {
+  const onVerify = useCallback(async () => {
     try {
       setMsg("Loading...");
       const { data } = await axios.patch(
@@ -31,11 +31,11 @@ export default function VerifyPage({ token }: { token: string }) {
         router.push("/login");
       }, 5000);
     }
-  };
+  }, [token, router]);
 
   useEffect(() => {
     onVerify();
-  }, []);
+  }, [onVerify]);
 
   return (
     <div className="flex h-screen w-screen justify-center items-center font-semibold">

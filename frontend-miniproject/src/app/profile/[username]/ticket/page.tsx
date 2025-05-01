@@ -29,7 +29,7 @@ export default function TicketTabs() {
     };
 
     fetch();
-  }, []);
+  }, [session.data?.user.id, session.data?.accessToken]);
 
   // Sort Upcoming Events by Nearest Date
   const upcomingTickets = ticket

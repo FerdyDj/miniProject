@@ -27,7 +27,7 @@ export default function TicketTabs() {
     };
 
     fetch();
-  }, []);
+  }, [session.data?.accessToken]);
 
   // Pagination
   const totalPages = Math.ceil(ticket.length / itemsPerPage);

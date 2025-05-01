@@ -7,7 +7,7 @@ import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
@@ -37,7 +37,7 @@ export default function Page({
     comment: "",
   };
 
-  const fetchReview = async () => {
+  const fetchReview = useCallback(async () => {
     try {
       const res = await axios.get(`/reviews/${eventId}`);
       setReviews(res.data.reviews);
@@ -46,11 +46,11 @@ export default function Page({
     } catch (err) {
       console.log(err);
     }
-  };
+  }, [eventId]);
 
   useEffect(() => {
     fetchReview();
-  }, [eventId]);
+  }, [fetchReview]);
 
   const onSubmit = async (
     value: IReviewForm,
@@ -107,7 +107,7 @@ export default function Page({
             {event?.title}
           </h3>
           <p className="text-sm text-gray-300 px-2">
-            {new Date(event?.eventDate!).toLocaleDateString("en-US", {
+            {new Date(event?.eventDate ?? "").toLocaleDateString("en-US", {
               weekday: "long",
               day: "numeric",
               month: "long",

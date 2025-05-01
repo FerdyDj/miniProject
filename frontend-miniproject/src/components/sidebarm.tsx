@@ -6,6 +6,10 @@ import { FiMenu, FiX } from "react-icons/fi";
 import { RiResetLeftLine } from "react-icons/ri";
 import axios from "@/lib/axios";
 
+interface IEvent{
+  location: string;
+}
+
 export default function SidebarMatch() {
   const [isOpen, setIsOpen] = useState(false);
   const [locations, setLocations] = useState<string[]>([]);
@@ -19,7 +23,7 @@ export default function SidebarMatch() {
         const allEvents = Array.isArray(response.data.data) ? response.data.data : [];
 
         const locationsFromEvents = allEvents
-          .map((event: any) => event.location || "Unknown Location")
+          .map((event: IEvent) => event.location || "Unknown Location")
           .filter((loc: string): loc is string => typeof loc === "string" && loc.trim() !== "");
 
         const uniqueLocations = Array.from(new Set(locationsFromEvents)).sort() as string[];

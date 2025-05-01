@@ -35,7 +35,7 @@ export default function MatchesTabs() {
     };
 
     fetch();
-  }, []);
+  }, [session.data?.accessToken]);
 
   if (loading) {
     return <div className="p-10 text-center">Loading...</div>;

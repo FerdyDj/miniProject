@@ -88,7 +88,7 @@ export class OrderController {
           data: { invoiceUrl: invoice.invoiceUrl },
         });
 
-        res.status(201).send({ message: "Order Created ✅", invoice });
+        res.status(201).send({ message: "Order Created ✅ Redirect to Payment Page", invoice });
       });
     } catch (err) {
       console.log(err);
