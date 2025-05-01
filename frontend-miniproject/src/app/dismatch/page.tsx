@@ -24,7 +24,6 @@ interface IEvents {
 
 export default function Page() {
   const [events, setEvents] = useState<IEvents[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
 
   // Pagination States
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -43,17 +42,11 @@ export default function Page() {
         setEvents(response.data.data);
       } catch (error) {
         console.error("Failed to fetch events:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchEvents();
   }, []);
-
-  if (loading) {
-    return <div className="text-white text-center">Loading events...</div>;
-  }
 
   // 🔥 Filtering based on Search, Category, and Location
   const filteredEvents = events.filter((event) => {
@@ -113,7 +106,7 @@ export default function Page() {
               </h3>
               {/* Image */}
               <Image
-                src={event.image || "/fallback-image.jpg"}
+                src={event.image}
                 alt={event.title}
                 width={300}
                 height={200}

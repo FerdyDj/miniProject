@@ -10,6 +10,7 @@ import { OrderRouter } from "./routers/order.router";
 import { TicketRouter } from "./routers/ticket.router";
 import { PointRouter } from "./routers/point.router";
 import { DiscountRouter } from "./routers/discount.router";
+import { ReviewRouter } from "./routers/review.router";
 
 const PORT: number = 8000;
 
@@ -52,6 +53,9 @@ app.use("/api/points", pointRouter.getRouter());
 
 const discountRouter = new DiscountRouter();
 app.use("/api/discounts", discountRouter.getRouter());
+
+const reviewRouter = new ReviewRouter();
+app.use("/api/reviews", reviewRouter.getRouter());
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

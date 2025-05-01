@@ -37,3 +37,15 @@ export interface IOrder {
   id: string;
   ticketId: string;
 }
+
+export interface IReview {
+  id: number;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  customer: {
+    id: number;
+    avatar: string;
+    fullname: string;
+  }
+}
