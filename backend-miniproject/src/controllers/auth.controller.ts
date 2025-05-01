@@ -22,11 +22,12 @@ export class AuthController {
         return;
       }
 
-      const refCode = referralCode
+      const referral = await import("referral-codes");
+      const refCode = referral.default
         .generate({
           length: 7,
           count: 1,
-        })
+        })[0]
         .toString();
 
       const salt = await genSalt(10);
