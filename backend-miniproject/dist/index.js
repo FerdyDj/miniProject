@@ -21,7 +21,7 @@ const payment_router_1 = require("./routers/payment.router");
 const PORT = 8000;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({ origin: process.env.URL_FE }));
 app.get("/api", (req, res) => {
     res.status(200).send({
         status: "success",
