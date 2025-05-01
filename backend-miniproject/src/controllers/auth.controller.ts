@@ -21,8 +21,8 @@ export class AuthController {
         return;
       }
 
-      const referralCodeModule = await import('referral-codes');
-      const refCode = referralCodeModule.default
+      const referralCodeModule = await import("referral-codes").then(mod => mod.default);
+      const refCode = referralCodeModule
         .generate({
           length: 7,
           count: 1,
