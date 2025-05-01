@@ -25,7 +25,7 @@ export default function MenuMobile(){
               </div>
               <hr className="my-8 text-gray-600" />
               <Link
-                href="/crematch"
+                href="/match"
                 className="block text-gray-800 px-4 rounded-lg font-semibold transition duration-300 text-shadow-sm hover:text-white hover:text-shadow-gray-800"
               >
                 Create a match as Organizer

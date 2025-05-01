@@ -79,7 +79,7 @@ export default function Page() {
   };
 
   return (
-    <div className="flex-row md:flex items-center justify-center h-screen w-screen">
+    <div className="flex-row md:flex items-center justify-center min-h-screen w-screen">
       <div className="flex flex-col items-center justify-center w-full md:w-[60%] rounded-sm pb-8 h-full">
         <Formik
           initialValues={initialValues}
