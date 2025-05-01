@@ -3,6 +3,7 @@ export interface IOrderTicket {
   qty: number;
   status: string;
   customerId: number;
+  invoiceUrl: string;
   ticket: {
     id: string;
     category: string;

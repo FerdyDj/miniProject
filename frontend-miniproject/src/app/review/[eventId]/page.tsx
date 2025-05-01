@@ -76,12 +76,22 @@ export default function Page({
   return (
     <div className="flex-row md:flex w-screen min-h-screen text-gray-300">
       <div className="px-7 mt-20 w-full md:w-[35%] -mb-14">
-        <Link href={`/profile/${session.data?.user.username}/ticket`}>
-          <div className="flex items-center gap-3">
-            <IoArrowBackOutline className="text-3xl text-white" />
-            <p>Back To Ticket</p>
-          </div>
-        </Link>
+        {session.data?.user.role === "CUSTOMER" && (
+          <Link href={`/profile/${session.data?.user.username}/ticket`}>
+            <div className="flex items-center gap-3">
+              <IoArrowBackOutline className="text-3xl text-white" />
+              <p>Back To Ticket</p>
+            </div>
+          </Link>
+        )}
+        {session.data?.user.role === "ORGANIZER" && (
+          <Link href={`/dashboard/${session.data?.user.username}`}>
+            <div className="flex items-center gap-3">
+              <IoArrowBackOutline className="text-3xl text-white" />
+              <p>Back To Ticket</p>
+            </div>
+          </Link>
+        )}
         <div className="flex flex-col items-center py-3">
           <Image
             src={

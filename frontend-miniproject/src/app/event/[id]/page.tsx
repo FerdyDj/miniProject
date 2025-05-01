@@ -2,13 +2,16 @@
 
 import { useState, useEffect, use } from "react";
 import axios from "@/lib/axios";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { IDiscount, IEvent, IPoint, ITicket } from "@/types/type";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Ticket from "./_components/ticket";
+import ImageTab from "./_components/image";
+import Description from "./_components/description";
+import RightBar from "./_components/rightbar";
+import PointDiscount from "./_components/pointdisc";
 
 export default function EventDetailPage({
   params,
@@ -146,19 +149,7 @@ export default function EventDetailPage({
     <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
       {/* Left Side */}
       <div className="md:col-span-2 space-y-8">
-        {/* Event Image */}
-        <div className="w-full overflow-hidden mt-12 rounded-lg">
-          <Image
-            src={
-              event?.image ||
-              "https://images.template.net/114549/free-basketball-poster-background-edit-online.jpg"
-            }
-            alt={`${event?.title}`}
-            width={1200}
-            height={600}
-            className="object-cover w-full h-auto"
-          />
-        </div>
+        <ImageTab event={event} />
         {/* Tabs */}
         <div className="border-b border-gray-700">
           <nav className="flex space-x-8">
@@ -186,33 +177,7 @@ export default function EventDetailPage({
         </div>
         {/* Content based on active tab */}
         <div className="space-y-6 text-gray-300">
-          {activeTab === "description" && (
-            <>
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-2">
-                  Description
-                </h2>
-                <p className="leading-relaxed">{event?.description}</p>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  Terms and Conditions
-                </h3>
-                <ul className="list-disc list-inside space-y-2 text-sm">
-                  <li>
-                    Tickets are only available through the official platform.
-                  </li>
-                  <li>
-                    Tickets are non-refundable unless the event is canceled.
-                  </li>
-                  <li>
-                    Please bring a valid ID and proof of purchase to the event.
-                  </li>
-                </ul>
-              </div>
-            </>
-          )}
+          {activeTab === "description" && <Description event={event} />}
           {activeTab === "ticket" && (
             <>
               {session?.user?.role !== "CUSTOMER" ? (
@@ -242,49 +207,12 @@ export default function EventDetailPage({
         </div>
       </div>
       {/* Right Sidebar */}
-      <div className="bg-gray-800 rounded-2xl mt-12 p-6 space-y-6 shadow-lg h-fit">
-        {/* Event Info */}
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-orange-400">
-            {event?.category} Match
-          </p>
-          <h1 className="text-2xl font-bold text-white">{event?.title}</h1>
-        </div>
-        {/* Event Details */}
-        <div className="text-sm text-gray-300 space-y-2">
-          <p>
-            <span className="font-semibold text-white">Date:</span>{" "}
-            {event?.eventDate
-              ? new Date(event.eventDate).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })
-              : "Date not available"}
-          </p>
-          <p>
-            <span className="font-semibold text-white">Time:</span>{" "}
-            {event?.startTime} - {event?.endTime}
-          </p>
-          <p>
-            <span className="font-semibold text-white">Location:</span>{" "}
-            {event?.venue}, {event?.location}
-          </p>
-        </div>
-        {/* Share Section */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-700">
-          <span className="text-sm text-gray-300">Share Match</span>
-          <div className="flex items-center space-x-4 text-white">
-            <button className="hover:scale-110 transition">🔗</button>
-            <button className="hover:scale-110 transition">📩</button>
-            <button className="hover:scale-110 transition">🟢</button>
-          </div>
-        </div>
+      <div>
+        <RightBar event={event} />
         {/* Ticket Section */}
         {session?.user.role === "CUSTOMER" && (
           <>
-            <div className="border-t border-gray-700 pt-4 space-y-4">
+            <div className="border-t bg-gray-800 border-gray-700 pt-6 space-y-6">
               <div className="flex justify-between items-center text-white font-bold">
                 {selectedTickets.length > 0 ? (
                   <div className="space-y-4">
@@ -293,7 +221,7 @@ export default function EventDetailPage({
                         key={item.id}
                         className="flex justify-between items-center text-white gap-3"
                       >
-                        <div>
+                        <div className="px-6">
                           <h4 className="font-semibold">{item.category}</h4>
                           <div className="flex items-center space-x-2 mt-1">
                             <button
@@ -318,51 +246,23 @@ export default function EventDetailPage({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-gray-400 text-sm bg-gray-800 px-6">
                     Select tickets to order
                   </p>
                 )}
               </div>
             </div>
             {/* Discounts */}
-            {points || discount ? (
-              <div className="mt-6 space-y-4">
-                {points && (
-                  <div className="flex items-center justify-between">
-                    <label className="text-gray-300">
-                      Use Points (IDR {points.amount})
-                    </label>
-                    <input
-                      type="checkbox"
-                      checked={usePoint}
-                      disabled={useVoucher}
-                      onChange={(e) => {
-                        setUsePoint(e.target.checked);
-                        if (e.target.checked) setUseVoucher(false);
-                      }}
-                    />
-                  </div>
-                )}
-                {discount && (
-                  <div className="flex items-center justify-between">
-                    <label className="text-gray-300">
-                      Use Voucher ({discount.percen}%)
-                    </label>
-                    <input
-                      type="checkbox"
-                      checked={useVoucher}
-                      disabled={usePoint}
-                      onChange={(e) => {
-                        setUseVoucher(e.target.checked);
-                        if (e.target.checked) setUsePoint(false);
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-            ) : null}
+            <PointDiscount
+              points={points}
+              discount={discount}
+              usePoint={usePoint}
+              setUsePoint={setUsePoint}
+              useVoucher={useVoucher}
+              setUseVoucher={setUseVoucher}
+            />
             {/* Total Section */}
-            <div className="border-t border-orange-300 pt-4">
+            <div className="border-t border-orange-300 p-6 bg-gray-800 rounded-b-2xl">
               <div className="flex justify-between text-white font-bold">
                 <span>Total:</span>
                 <span>IDR {Math.floor(totalPrice).toLocaleString()}</span>

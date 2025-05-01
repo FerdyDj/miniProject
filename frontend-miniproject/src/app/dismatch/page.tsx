@@ -160,10 +160,10 @@ export default function Page() {
         </button>
         <span className="text-white">{`Page ${currentPage} of ${totalPages}`}</span>
         <button
-          disabled={currentPage === totalPages}
+          disabled={currentPage === totalPages || paginatedEvents.length === 0}
           onClick={handleNextPage}
           className={`py-2 px-4 rounded ${
-            currentPage === totalPages
+            currentPage === totalPages || paginatedEvents.length === 0
               ? "bg-gray-600 cursor-not-allowed"
               : "bg-orange-500 hover:bg-orange-600 cursor-pointer"
           }`}

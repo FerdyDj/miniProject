@@ -156,13 +156,23 @@ export default function MatchesTabs() {
                   </button>
                 </div>
               )}
+              {activeTab === "ended" && (
+                <div className="flex justify-center mb-5">
+                  <button
+                    className="bg-radial w-[50%] from-orange-300 to-orange-500 text-gray-800 px-4 py-2 rounded-md cursor-pointer hover:from-orange-300 hover:to-orange-600 text-shadow-md"
+                    onClick={() => router.push(`/review/${e.id}`)}
+                  >
+                    Review
+                  </button>
+                </div>
+              )}
             </div>
           ))
         ) : (
           <div className="text-gray-500 text-center">
             {activeTab === "upcoming"
-              ? "No upcoming matches."
-              : "No ended matches or create a match—start creating!"}
+              ? "Start Create Events That Inspire"
+              : "No ended matches!"}
           </div>
         )}
       </div>
@@ -181,10 +191,10 @@ export default function MatchesTabs() {
         </button>
         <span className="text-white">{`Page ${currentPage} of ${totalPages}`}</span>
         <button
-          disabled={currentPage === totalPages}
+          disabled={currentPage === totalPages || paginatedEvents.length === 0}
           onClick={handleNextPage}
           className={`py-2 px-4 rounded ${
-            currentPage === totalPages
+            currentPage === totalPages || paginatedEvents.length === 0
               ? "bg-gray-600 cursor-not-allowed"
               : "bg-orange-500 hover:bg-orange-600 cursor-pointer"
           }`}

@@ -34,7 +34,7 @@ export default function SidebarOrganizer() {
                 My Event
               </Link>
               <Link
-                href={`/dashboard/${session.data.user.username}/chart`}
+                href={`/dashboard/${session.data.user.username}/chartdata`}
                 className="flex items-center gap-3 rounded-md p-3 transition duration-300 hover:bg-gray-300"
               >
                 <FaChartBar className="w-5 h-5" />

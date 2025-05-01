@@ -163,7 +163,7 @@ export default function TicketTabs() {
           <div className="text-gray-500 text-center">
             {activeTab === "upcoming"
               ? "No upcoming matches."
-              : "No ended matches"}
+              : "No ended matches."}
           </div>
         )}
       </div>
