@@ -7,6 +7,18 @@ import path from "path";
 import fs from "fs";
 import handlebars from "handlebars";
 
+function generateReferralCode(length: number = 7): string {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    code += characters[randomIndex];
+  }
+
+  return code;
+}
+
 export class AuthController {
   async registerCustomer(req: Request, res: Response) {
     try {
@@ -21,12 +33,7 @@ export class AuthController {
         return;
       }
 
-      const referralCodeModule = await import("referral-codes").then(mod => mod.default);
-      const refCode = referralCodeModule
-        .generate({
-          length: 7,
-          count: 1,
-        })[0];
+      const refCode = generateReferralCode();
 
       const salt = await genSalt(10);
       const hashedPass = await hash(password, salt);

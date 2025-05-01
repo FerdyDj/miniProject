@@ -12,7 +12,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
+  "type": "commonjs",
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
@@ -40,7 +40,6 @@
     "multer": "^1.4.5-lts.2",
     "nodemailer": "^6.10.1",
     "prisma": "^6.5.0",
-    "referral-codes": "^3.0.0",
     "streamifier": "^0.1.1",
     "xendit-node": "^6.3.0"
   }
