@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Register(){
     return(
-        <div className="flex-row md:flex mt-20 md:mt-0 w-screen h-screen items-center justify-center text-white">
+        <div className="flex-row md:flex mt-20 md:mt-0 w-screen min-h-screen items-center justify-center text-white">
               <div className="w-full md:w-[50%] flex flex-col items-center justify-center">
                 <Image
                   src="/HoopAuth.svg"

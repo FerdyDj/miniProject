@@ -63,7 +63,7 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen w-screen flex flex-col items-center justify-center text-white">
+    <div className="h-screen w-screen flex flex-col items-center justify-center text-white">
       <div className="border-2 border-orange-500 rounded-lg w-[90%] md:w-[700px] p-8">
         <h2 className="text-center text-3xl py-8">Login as Organizer</h2>
         <Formik
