@@ -7,11 +7,6 @@ import path from "path";
 import fs from "fs";
 import handlebars from "handlebars";
 
-let referralCodeModule: any;
-(async () => {
-  referralCodeModule = await import("referral-codes");
-})();
-
 export class AuthController {
   async registerCustomer(req: Request, res: Response) {
     try {
@@ -26,6 +21,7 @@ export class AuthController {
         return;
       }
 
+      const referralCodeModule = await import('referral-codes');
       const refCode = referralCodeModule.default
         .generate({
           length: 7,
