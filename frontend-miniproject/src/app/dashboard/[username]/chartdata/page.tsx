@@ -5,7 +5,6 @@ import { DashboardSummary, ChartData } from '@/types/dashboard';
 import {
   CalendarIcon,
   ShoppingCartIcon,
-  DollarSignIcon,
   TicketIcon,
 } from 'lucide-react';
 import {

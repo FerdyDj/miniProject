@@ -5,7 +5,6 @@ import { AxiosError } from "axios";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { toast } from "react-toastify";
@@ -29,7 +28,6 @@ interface ILoginForm {
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
 
   const initialValues: ILoginForm = {
     email: "",
@@ -140,7 +138,7 @@ export default function LoginForm() {
       </div>
       <div className="border-2 border-orange-500 rounded-sm mt-4 w-[90%] md:w-[700px] p-4">
         <p className="flex justify-center text-sm">
-          Don't have an account?&nbsp;
+          Don&apos;t have an account?&nbsp;
           <Link
             href={"/register/customer"}
             className="text-orange-500 font-bold"

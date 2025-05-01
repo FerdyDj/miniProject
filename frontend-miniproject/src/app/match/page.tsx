@@ -4,6 +4,7 @@ import axios from "@/lib/axios";
 import { AxiosError } from "axios";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -126,6 +127,17 @@ export default function Page() {
                         handleImageChange(e);
                       }}
                     />
+                    {selectedImage && (
+                      <div className="mt-4">
+                        <Image
+                          src={URL.createObjectURL(selectedImage)}
+                          width={100}
+                          height={100}
+                          alt="Selected Preview"
+                          className="rounded-md w-full h-auto"
+                        />
+                      </div>
+                    )}
                     {touched.image && errors.image ? (
                       <div className="text-red-500 text-[12px]">
                         {errors.image}

@@ -219,7 +219,7 @@ export default function Page() {
       </div>
       <div className="flex flex-col items-center justify-center w-full md:w-[40%] p-4 h-full bg-gradient-to-r from-orange-300 to-orange-400 text-shadow-md text-center">
         <h2 className="text-5xl font-bold my-3">WELCOME</h2>
-        <p>Create your account and start ballin' with full access.</p>
+        <p>Create your account and start ballin&apos; with full access.</p>
         <p className="my-3">Already have an account?</p>
         <Link
           href="/login/organizer"
