@@ -1,12 +1,16 @@
 import { Request, Response } from "express";
 import prisma from "../prisma";
-import referralCode from "referral-codes";
 import { compare, genSalt, hash } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { transporter } from "../helpers/mailer";
 import path from "path";
 import fs from "fs";
 import handlebars from "handlebars";
+
+let referralCodeModule: any;
+(async () => {
+  referralCodeModule = await import("referral-codes");
+})();
 
 export class AuthController {
   async registerCustomer(req: Request, res: Response) {
@@ -22,8 +26,7 @@ export class AuthController {
         return;
       }
 
-      const referral = await import("referral-codes");
-      const refCode = referral.default
+      const refCode = referralCodeModule.default
         .generate({
           length: 7,
           count: 1,
