@@ -18,7 +18,7 @@ import {
 } from 'recharts';
 import { FaRupiahSign } from 'react-icons/fa6';
 
-const API_BASE = 'http://localhost:8000/api/dashboard';
+const API_BASE = 'https://be-hooppass.vercel.app/api/dashboard';
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
