@@ -27,8 +27,7 @@ export class AuthController {
         .generate({
           length: 7,
           count: 1,
-        })[0]
-        .toString();
+        })[0];
 
       const salt = await genSalt(10);
       const hashedPass = await hash(password, salt);
