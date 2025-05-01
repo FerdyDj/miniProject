@@ -1,4 +1,7 @@
 import { IEvent } from "@/types/type";
+import Link from "next/link";
+import { FaFacebook, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 export default function RightBar({ event }: { event: IEvent | null }) {
   return (
@@ -37,9 +40,26 @@ export default function RightBar({ event }: { event: IEvent | null }) {
         <div className="flex items-center justify-between pt-4 border-gray-700">
           <span className="text-sm text-gray-300">Share Match</span>
           <div className="flex items-center space-x-4 text-white">
-            <button className="hover:scale-110 transition">🔗</button>
-            <button className="hover:scale-110 transition">📩</button>
-            <button className="hover:scale-110 transition">🟢</button>
+            <Link
+              href={`https://www.facebook.com/sharer/sharer.php?u=http://localhost:3000/event/${event?.id}`}
+            >
+              <FaFacebook className="w-8 h-8 text-blue-500 hover:text-blue-400 hover:cursor-pointer" />
+            </Link>
+            <Link
+              href={`https://www.twitter.com/intent/tweet?url=http://localhost:3000/event/${event?.id}`}
+            >
+              <FaXTwitter className="w-8 h-8 text-black hover:text-gray-700 hover:cursor-pointer" />
+            </Link>
+            <Link
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=http://localhost:3000/event/${event?.id}`}
+            >
+              <FaLinkedin className="w-8 h-8 text-blue-500 hover:text-blue-400 hover:cursor-pointer" />
+            </Link>
+            <Link
+              href={`https://wa.me/?text=http://localhost:3000/event/${event?.id}`}
+            >
+              <FaWhatsapp className="w-8 h-8 text-green-500 hover:text-green-400 hover:cursor-pointer" />
+            </Link>
           </div>
         </div>
       </div>

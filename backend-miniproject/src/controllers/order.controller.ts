@@ -147,26 +147,7 @@ export class OrderController {
           },
         },
         orderBy: { ticket: { event : { eventDate: "asc"}}}
-      });
-  
-      // Transform the result to simplify the response format
-      // const customerTickets = orders.map((order) => ({
-      //   orderId: order.id,
-      //   ticketId: order.ticket.id,
-      //   ticketCategory: order.ticket.category,
-      //   ticketPrice: order.ticket.price,
-      //   quantity: order.qty,
-      //   event: {
-      //     eventId: order.ticket.event.id,
-      //     title: order.ticket.event.title,
-      //     eventDate: order.ticket.event.eventDate,
-      //     location: order.ticket.event.location, 
-      //     venue: order.ticket.event.venue, 
-      //     startTime: order.ticket.event.startTime,
-      //     endTime: order.ticket.event.endTime,
-      //   },
-      // }));
-  
+      });  
 
       res.status(200).send({
         message: "Ticket detail",
