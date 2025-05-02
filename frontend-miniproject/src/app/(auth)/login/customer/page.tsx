@@ -48,9 +48,9 @@ export default function LoginForm() {
         email: user.email,
         username: user.username,
         fullname: user.fullname,
-        avatar: user.avatar ?? "",
-        refCode: user.refCode ?? "",
-        refBy: user.refBy ?? "",
+        avatar: user.avatar || "",
+        refCode: user.refCode || "",
+        refBy: user.refBy || "",
         role: user.role,
         accessToken: data.access_token,
       });
